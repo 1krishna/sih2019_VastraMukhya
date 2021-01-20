@@ -1,0 +1,136 @@
+<modification>
+	<id>tshirtecommerce</id>
+	<version>4.2.1</version>
+	<vqmver>2.4.0</vqmver>
+	<author>Tshirtecommerce Team</author>
+	
+	<file error="skip" name="admin/controller/common/header.php,system/storage/modification/admin/controller/common/header.php">
+		<operation error="skip">
+			<search position="before"><![CDATA[$this->load->model('setting/store');]]></search>
+			<add><![CDATA[
+				$tshirtPath = dirname(DIR_SYSTEM). DIRECTORY_SEPARATOR .'tshirtecommerce'. DIRECTORY_SEPARATOR;
+				$file = $tshirtPath. 'version.json';
+				if( file_exists($file) )
+				{
+					$content = file_get_contents($file);
+					$version = json_decode($content, true);
+					if( isset($version['update']) && $version['update'] == 1 )
+					{
+						$tshirtUpdate = $tshirtPath. 'opencart'. DIRECTORY_SEPARATOR .'quicksetup'. DIRECTORY_SEPARATOR .'update.php';
+						if(file_exists($tshirtUpdate))
+						{
+							$str_token = version_compare(VERSION, '3.0.0.0', '<') ? 'token='.$this->session->data['token'] : 'user_token='.$this->session->data['user_token'];
+							$str_ssl = version_compare(VERSION, '2.2.0.0', '<') ? 'SSL' : true;
+							$updateUrl = $this->url->link('tshirtecommerce/ajax/updateProductDesign', $str_token, $str_ssl);
+							$designUrl = $this->url->link('catalog/tshirtecommerce/index', $str_token, $str_ssl);
+							
+							include_once($tshirtUpdate);
+						}
+					}
+				}
+			]]></add>
+		</operation>
+	</file>
+	<file error="skip" name="admin/controller/tshirtecommerce/ajax.php">
+		<operation error="skip">
+			<search position="before"><![CDATA[$file = $TSHIRTECOMMERCE_ROOT . 'version.json';]]></search>
+			<add><![CDATA[
+				/*HOOK Update*/
+			]]></add>
+		</operation>
+	</file>
+	<file error="skip" name="admin/controller/common/header.php,system/storage/modification/admin/controller/common/header.php">
+		<operation error="skip">
+			<search position="before"><![CDATA[$this->document->getStyles()]]></search>
+			<add><![CDATA[
+				$this->document->addStyle('view/stylesheet/tshirtecommerce.css');
+			]]></add>
+		</operation>
+	</file>
+	<!-- back-office menu -->
+	<file error="skip" name="admin/controller/common/column_left.php,system/storage/modification/admin/controller/common/column_left.php">
+		<operation error="skip">
+			<search position="before"><![CDATA[$catalog = array();]]></search>
+			<add><![CDATA[
+				$tshirtecommerce = array();
+				if (!isset($this->tshirtecommerce_campaign)) $this->tshirtecommerce_campaign = 0;
+				if ($this->user->hasPermission('access', 'catalog/tshirtecommerce')) {	
+					$tshirtecommerce[] = array(
+						'name' => 'Dashboard',
+						'href' => $this->url->link('catalog/tshirtecommerce/index', 'user_token='.$this->session->data['user_token'], true),
+						'children' => array()		
+					);	
+				}
+				if ($this->user->hasPermission('access', 'extension/module/tshirtecommerce')) {	
+					$tshirtecommerce[] = array(
+						'name' => 'Opencart Settings',
+						'href' => $this->url->link('extension/module/tshirtecommerce', 'user_token='.$this->session->data['user_token'], true),
+						'children' => array()		
+					);
+					if (isset($this->tshirtecommerce_campaign) && $this->tshirtecommerce_campaign == 1) {
+						$tshirtecommerce[] = array(
+							'name' => 'Campaign',
+							'href' => $this->url->link('tshirtecommerce/tshirtecommercecampaign', 'user_token='.$this->session->data['user_token'], true),
+							'children' => array()		
+						);
+						$tshirtecommerce[] = array(
+							'name' => 'Withdrawals',
+							'href' => $this->url->link('tshirtecommerce/tshirtecommercecampaign/withdrawals', 'user_token='.$this->session->data['user_token'], true),
+							'children' => array()		
+						);
+					}
+					$tshirtecommerce[] = array(
+						'name' => 'Update',
+						'href' => $this->url->link('catalog/tshirtecommerce/update', 'user_token='.$this->session->data['user_token'], true),
+						'children' => array()		
+					);		
+				}
+				if ($tshirtecommerce) {
+					$data['menus'][] = array(
+						'id' => 'menu-tshirtecommerce',
+						'icon' => 'fa-tshirtecommerce', 
+						'name' => 'Product Designer',
+						'href' => '',
+						'children' => $tshirtecommerce
+					);		
+				}
+			]]></add>
+		</operation>
+	</file>
+
+	<file error="skip" name="catalog/controller/account/account.php,system/storage/modification/catalog/controller/account/account.php">
+		<operation error="skip">
+			<search position="after"><![CDATA[$data['credit_cards'] = array();]]></search>
+			<add><![CDATA[
+				$logged = array(
+					'login' => true,
+					'email' => $this->customer->getEmail(),
+					'id' => $this->customer->isLogged()
+				);
+				$this->session->data['is_logged'] = $logged;
+			]]></add>
+		</operation>
+	</file>
+	<file error="skip" name="catalog/controller/checkout/login.php,system/storage/modification/catalog/controller/checkout/login.php">
+		<operation error="skip">
+			<search position="before"><![CDATA[$activity_data = array(]]></search>
+			<add><![CDATA[
+				$logged = array(
+					'login' => true,
+					'email' => $this->customer->getEmail(),
+					'id' => $this->customer->getId()
+				);
+				$this->session->data['is_logged'] = $logged;
+			]]></add>
+		</operation>
+	</file>
+	<file error="skip" name="catalog/controller/account/logout.php,system/storage/modification/catalog/controller/account/logout.php">
+		<operation error="skip">
+			<search position="after"><![CDATA[$this->customer->logout();]]></search>
+			<add><![CDATA[
+				unset($this->session->data['is_logged']);
+			]]></add>
+		</operation>
+	</file>
+	
+</modification>

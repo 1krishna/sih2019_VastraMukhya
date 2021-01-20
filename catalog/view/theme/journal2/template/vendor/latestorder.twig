@@ -1,0 +1,80 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"><i class="fa fa-shopping-cart"></i> {{ heading_title }}</h3>
+  </div>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <td class="text-right">{{ column_order_id }}</td>
+          <td>{{ column_customer }}</td>
+          <td>{{ column_status }}</td>
+          <td>{{ column_date_added }}</td>
+          <td class="text-right">{{ column_total }}</td>
+          <td class="text-right">{{ column_action }}</td>
+        </tr>
+      </thead>
+      <tbody>
+		{% for order in orders %}
+        <tr>
+          <td class="text-right">{{ order.order_id }}</td>
+          <td>{{ order.firstname }}</td>
+
+          <td><div id="statusedit{{ order.order_id }}"><i class="pstatuss" rel="{{ order.order_id }}" rel1="{{ order.order_status_id }}">{% if not order.order_status_id %} " <span class="productstatus">{{ order.statusname }}</span> "
+          {% else %}
+          <span class="productstatus">{{ order.statusname }}</span>
+          {% endif %}</i></div></td> 
+
+          <td>{{ order.date_added }}</td>
+          <td class="text-right">{{ order.total }}</td>
+          <td class="text-right"><a href="{{ order.view }}" data-toggle="tooltip" title="{{ button_view }}" class="btn btn-info"><i class="fa fa-eye"></i></a></td>
+        </tr>
+		{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+$(document).on('click','.pstatuss',function() {
+    rel=$(this).attr('rel');
+    rel1=$(this).attr('rel1');
+
+    html  ='<div class="input-group addpstatus'+rel+'">';
+
+    html +='<select type="text" name="order_status_id" id="pstatus'+rel+'" class="form-control">';
+    html +='<option value="">{{ text_select }}</option>';
+    {% for orders in order_statuss %}
+    html += '    <option value="{{ orders.order_status_id }}">{{ orders.name|escape('js') }}</option>';
+    {% endfor %}
+    html += '</select>';
+
+    html +='<input type="hidden" name="order_id" id="order_id'+rel+'" value="'+rel+'"/>';
+    html +='<span class="input-group-btn"><button data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary productsstatus" rel='+rel+' type="button"><i class="fa fa-save"></i></button></span></div></div>';
+    $('#statusedit'+rel).html(html);
+    $("#pstatus"+rel).val(rel1);    
+  });
+</script>
+
+<script>
+$(document).on('click','.productsstatus',function() {
+  rel=$(this).attr('rel');
+  $.ajax({
+  url: 'index.php?route=vendor/latestorder/addorderstatus',
+  type:'post',
+  dataType:'json',
+  data: $('.addpstatus'+rel+' select, .addpstatus'+rel+' input[type=\'hidden\']'),
+	beforeSend: function() {
+			$('.productsstatus').button('loading');
+		},
+		complete: function() {
+			$('.productsstatus').button('reset');
+		},
+  success: function(json) {
+    if (json['success']) {
+      
+    }
+    setTimeout(function(e){ $('.close').trigger('click');location.reload();},500);
+  }
+});
+});
+</script>

@@ -1,0 +1,13 @@
+.tcolors-design {text-align: center; position: relative; display: inline-block;padding: 4px 6px;}
+.tcolors-design label{margin: 4px;}
+.tcolors-design .tcolor-span {
+	border: 1px solid #cdcdcd; position: relative; float:left;
+	-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;
+	outline: 0;
+}
+@media only screen and (max-width: 768px) {
+	.tcolors-design .tcolor-span {padding: 7px;}
+}
+@media only screen and (min-width: 769px) {
+	.tcolors-design .tcolor-span {padding: 10px;}
+}

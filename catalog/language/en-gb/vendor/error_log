@@ -1,0 +1,2 @@
+[21-Apr-2018 08:26:19 America/Denver] PHP Warning:  mysqli::mysqli(): (HY000/2002): No such file or directory in /home/opencar/public_html/demo31/system/library/db/mysqli.php on line 7
+[21-Apr-2018 08:26:19 America/Denver] PHP Notice:  Error: Could not make a database link (2002) No such file or directory in /home/opencar/public_html/demo31/system/library/db/mysqli.php on line 10

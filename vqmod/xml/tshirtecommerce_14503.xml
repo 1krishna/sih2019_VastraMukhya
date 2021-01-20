@@ -1,0 +1,177 @@
+<modification>
+	<id>tshirtecommerce</id>
+	<version>4.2.1</version>
+	<vqmver>2.4.0</vqmver>
+	<author>Tshirtecommerce Team</author>
+
+	<!-- @deprecated -->
+
+	<!-- @since 4.2.0 -->
+	<!-- extend mini cart information and confirm order informations -->
+	<file error="skip" name="catalog/controller/common/cart.php,system/storage/modification/catalog/common/cart.php,catalog/controller/checkout/confirm.php,system/storage/modification/catalog/controller/checkout/confirm.php">
+		<operation error="skip">
+			<search position="before"><![CDATA[
+				$data['products'][]
+			]]></search>
+			<add><![CDATA[
+				/* vqmod/xml/tshirtecommerce_14503.xml */
+				$this->load->model('tshirtecommerce/order');
+				$tshirtecommerce = isset($product['tshirtecommerce']) ? $product['tshirtecommerce'] : array();
+				if (count($tshirtecommerce) > 0) $tshirtecommerce['parent_id'] = $product['product_id'];
+				$option_data_new = $this->model_tshirtecommerce_order->extendOptions($tshirtecommerce, $option_data);
+				$option_data = $option_data_new;
+			]]></add>
+		</operation>
+	</file>
+
+	<!-- @since 4.2.1 -->
+	<file error="skip" name="catalog/controller/startup/seo_url.php,system/storage/modification/catalog/controller/startup/seo_url.php">
+		<operation error="skip">
+			<search position="before"><![CDATA[
+				foreach ($parts as $part) {
+			]]></search>
+			<add><![CDATA[
+				$seo_tshirtecommerce = false;
+				foreach ($parts as $idx => $part) {
+					if (strpos($part, 'user_design::') !== false) {
+						$this->request->get['user_design'] = str_replace('user_design::', '', $part);
+						unset($parts[$idx]);
+
+						$seo_tshirtecommerce = true;
+					}
+				}
+				if ($seo_tshirtecommerce === true) {
+					$this->request->get['_route_'] = implode('/', $parts);
+				}
+			]]></add>
+		</operation>
+		<operation error="skip">
+			<search position="before"><![CDATA[
+				if (!isset($this->request->get['route']))
+			]]></search>
+			<add><![CDATA[
+				if ($this->config->get('config_seo_url') == 1 && $this->config->get('tshirtecommerce_seo_enable') == 1) {
+					
+					$tshirtecommerce_keyword = $this->config->get('tshirtecommerce_seo_default_keyword');
+					if ($tshirtecommerce_keyword == null || $tshirtecommerce_keyword == '') {
+						$tshirtecommerce_keyword = 'customize';
+					}
+
+					if (count($parts) && isset($parts[0]) && $parts[0] == $tshirtecommerce_keyword) {
+						foreach ($parts as $idx => $part) {
+							if ($part == $tshirtecommerce_keyword) {
+								$this->request->get['route'] = 'tshirtecommerce/designer';
+							}
+
+							if ($part == 'parent') {
+								$this->request->get['parent_id'] = $parts[$idx - 1];
+							}
+
+							if ($part == 'product') {
+								$this->request->get['product_id'] = $parts[$idx - 1];
+							}
+
+							if ($part == 'cart') {
+								$this->request->get['cart_id'] = $parts[$idx - 1];
+							}
+						}
+					}
+					
+					if (count($parts) && empty($this->request->get['route']) && isset($this->request->get['product_id']))
+					{
+						if(isset($parts[1]))
+							$this->request->get['idea_id'] = $parts[1];
+						$this->request->get['_route_'] = implode('/', $parts);
+						$this->request->get['route'] = 'product/product';
+					}
+				}
+			]]></add>
+		</operation>
+		<operation error="skip">
+			<search position="before"><![CDATA[
+				if ($url)
+			]]></search>
+			<add><![CDATA[
+				if ($this->config->get('config_seo_url') == 1 && $this->config->get('tshirtecommerce_seo_enable') == 1) {
+					$this->load->model('tshirtecommerce/seo_url');
+
+					if (isset($data['route'])) {
+						if ($data['route'] == 'tshirtecommerce/designer') {
+							$tshirtecommerce_query = '';
+							$tshirtecommerce_keyword = $this->config->get('tshirtecommerce_seo_default_keyword');
+							if ($tshirtecommerce_keyword == null || $tshirtecommerce_keyword == '') {
+								$tshirtecommerce_keyword = 'customize';
+							}
+
+							foreach ($data as $key => $value) {
+								if ($key == 'route') {
+									$tshirtecommerce_query .= $tshirtecommerce_keyword;
+								} elseif ($key == 'parent_id') {
+									$tshirtecommerce_query .= sprintf('/%s/parent', $value);
+								} elseif ($key == 'product_id') {
+									$tshirtecommerce_query .= sprintf('/%s/product', $value);
+								} elseif ($key == 'cart_id') {
+									$tshirtecommerce_query .= sprintf('/%s/cart', $value);
+								} else {
+									$tshirtecommerce_query .= sprintf('/%s/%s', $value, $key);
+								}
+							}
+							
+							return $url_info['scheme'].'://'.$url_info['host'].(isset($url_info['port']) ? ':'.$url_info['port'] : '').str_replace('index.php', '', $url_info['path']).$tshirtecommerce_query;
+						}
+						
+						if ($data['route'] == 'product/product') {
+							$tshirtecommerce_query = '';
+							foreach ($data as $key => $value) {
+								if ($key == 'user_design') {
+									$url .= sprintf('/%s::%s', 'user_design', $value);
+									unset($data[$key]);
+								}
+							}
+						}
+					}
+				}
+			]]></add>
+		</operation>
+	</file>
+
+	<file path="catalog/controller/common/header.php,system/storage/modification/catalog/controller/common/header.php">
+	    <operation>
+            <search><![CDATA[
+				$this->load->language('common/header');
+            ]]></search>
+            <add position="before"><![CDATA[
+			if (isset($this->request->get['route'])) {
+				if (isset($this->request->get['product_id'])) {
+
+					$tse_url = 'product_id='.$this->request->get['product_id'];
+					if (isset($this->request->get['user_design'])) {
+						$tse_url .= '&user_design='.$this->request->get['user_design'];
+					}
+
+					$data['tseclass']['controller'] = 'product/product';
+					$data['tseclass']['url'] = $this->url->link('product/product', $tse_url, true);
+					$data['tseclass']['image'] = '';
+				}
+			}
+            ]]></add>
+        </operation>
+	</file>
+
+	<file path="catalog/view/theme/*/template/common/header.twig,system/storage/modification/catalog/view/theme/*/template/common/header.twig">
+	    <operation>
+            <search><![CDATA[
+				</head>
+            ]]></search>
+            <add position="before"><![CDATA[
+				{% if tseclass is defined and tseclass.controller == 'product/product' %}
+				<meta content='{{ title }}' property='og:title'/>
+				<meta content='{{ description }}' property='og:description'/>
+				<meta content='{{ tseclass.url }}' property='og:url'/>
+				<meta content='{{ tseclass.image }}' property='og:image'/>
+				{% endif %}
+            ]]></add>
+        </operation>
+	</file>
+
+</modification>

@@ -1,0 +1,46 @@
+<modification>
+	<id>tshirtecommerce</id>
+	<version>4.4.0</version>
+	<vqmver>2.4.0</vqmver>
+	<author>Tshirtecommerce Team</author>
+
+	<file error="skip" name="admin/controller/common/column_left.php,system/storage/modification/admin/controller/common/column_left.php">
+		<operation error="skip">
+			<search position="before"><![CDATA[
+				if (isset($this->tshirtecommerce_campaign) && $this->tshirtecommerce_campaign == 1) {
+			]]></search>
+			<add><![CDATA[
+				if ($this->user->hasPermission('access', 'tshirtecommerce/import')) {
+				 	$str_token = (version_compare(VERSION, '3.0.0', '>=')) ? 'user_token='.$this->session->data['user_token'] : 'token='.$this->session->data['token'];
+					$str_ssl = (version_compare(VERSION, '2.2.0.0', '>=')) ? true : 'SSL';
+					$tshirtecommerce[] = array(
+						'name' => 'Import Data',
+						'href' => $this->url->link('tshirtecommerce/import', $str_token, $str_ssl),
+						'children' => array()
+					);
+				}
+			]]></add>
+		</operation>
+	</file>
+	
+	<file error="skip" name="catalog/controller/common/footer.php,system/storage/modification/catalog/controller/common/footer.php">
+		<operation error="skip">
+			<search position="after"><![CDATA[
+				$this->load->language('common/footer');
+			]]></search>
+			<add><![CDATA[
+				if (isset($_GET['imports_9file']) && $_GET['imports_9file'] != '') {
+					if ($this->request->server['HTTPS']) {
+						$url = HTTPS_SERVER;
+					} else {
+						$url = HTTP_SERVER;
+					}
+				 	$url = $url.'admin/index.php?route=tshirtecommerce/import&'.base64_decode($_GET['imports_9file']);
+					header("Location: ". $url);
+					exit();
+				}
+			]]></add>
+		</operation>
+	</file>
+
+</modification>

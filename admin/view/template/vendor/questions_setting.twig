@@ -1,0 +1,146 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-questions" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+    </div>
+    <h1>{{ heading_title }}</h1>
+    <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+    </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h2 class="panel-title"><i class="fa fa-pencil"></i> {{ text_setting }}</h2>
+      </div>
+      <div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-questions" class="form-horizontal">
+			<div class="form-group">
+				<div class="col-sm-6">
+					<label class="col-sm-4 control-label" for="input-askbg"><span data-toggle="tooltip" title="{{ help_askbg }}">{{ entry_askbg }}</span></label>
+					<div class="col-sm-8">								
+					   <input type="text" name="questions_askbg" value="{{ questions_askbg }}" placeholder="{{ entry_askbg }}" id="input-askbg" class="form-control demo" />
+					</div>	
+				</div>
+				<div class="col-sm-6">
+					<label class="col-sm-4 control-label" for="input-ask-color"><span data-toggle="tooltip" title="{{ help_askcolor }}">{{ entry_askcolor }}</span></label>
+					<div class="col-sm-8">								
+					   <input type="text" name="questions_ask_color" value="{{ questions_ask_color }}" placeholder="{{ entry_askcolor }}" id="input-ask-color" class="form-control demo" />
+					</div>							
+				</div>						
+			</div>
+            
+            <div class="form-group">
+            	<div class="col-sm-6">
+					<label class="col-sm-4 control-label" for="input-btnbg"><span data-toggle="tooltip" title="{{ help_btnbg }}">{{ entry_btnbg }}</span></label>
+					<div class="col-sm-8">								
+					   <input type="text" name="questions_btnbg" value="{{ questions_btnbg }}" placeholder="{{ entry_btnbg }}" id="input-btnbg" class="form-control demo" />
+					</div>							
+				</div>	
+				<div class="col-sm-6">
+					<label class="col-sm-4 control-label" for="input-btn-color"><span data-toggle="tooltip" title="{{ help_btncolor }}">{{ entry_btncolor }}</span></label>
+					<div class="col-sm-8">								
+					   <input type="text" name="questions_btn_color" value="{{ questions_btn_color }}" placeholder="{{ entry_btncolor }}" id="input-btn-color" class="form-control demo" />
+					</div>							
+				</div>						
+			</div>
+            
+            <div class="form-group">
+            	<div class="col-sm-6">
+					<label class="col-sm-4 control-label" for="input-qsbg"><span data-toggle="tooltip" title="{{ help_qsbg }}">{{ entry_qsbg }}</span></label>
+					<div class="col-sm-8">								
+					   <input type="text" name="questions_qsbg" value="{{ questions_qsbg }}" placeholder="{{ entry_qsbg }}" id="input-qsbg" class="form-control demo" />
+					</div>							
+				</div>	
+				<div class=" col-sm-6">
+					<label class="col-sm-4 control-label" for="input-qscolor"><span data-toggle="tooltip" title="{{ help_qscolor }}">{{ entry_qscolor }}</span></label>
+					<div class="col-sm-8">								
+					   <input type="text" name="questions_qscolor" value="{{ questions_qscolor }}" placeholder="{{ entry_qscolor }}" id="input-qscolor" class="form-control demo" />
+					</div>							
+				</div>						
+			</div>
+            <div class="form-group">
+            	<div class="col-sm-6">
+					<label class="col-sm-4 control-label" for="input-ansbg"><span data-toggle="tooltip" title="{{ help_ansbg }}">{{ entry_ansbg }}</span></label>
+					<div class="col-sm-8">								
+					   <input type="text" name="questions_ansbg" value="{{ questions_ansbg }}" placeholder="{{ entry_ansbg }}" id="input-ansbg" class="form-control demo" />
+					</div>			
+				</div>	
+				<div class="col-sm-6">
+					<label class="col-sm-4 control-label" for="input-anscolor"><span data-toggle="tooltip" title="{{ help_anscolor }}">{{ entry_anscolor }}</span></label>
+					<div class="col-sm-8">								
+					   <input type="text" name="questions_anscolor" value="{{ questions_anscolor }}" placeholder="{{ entry_anscolor }}" id="input-anscolor" class="form-control demo" />
+					</div>							
+				</div>			
+			</div>
+            <div class="form-group">
+            	<div class="col-sm-12">
+					<label class="col-sm-2 control-label"><span data-toggle="tooltip" title="{{ help_answertext }}">{{ entry_answertext }}</span></label>
+					<div class="col-sm-10">
+						 <input type="text" name="questions_answertext" value="{{ questions_answertext }}" placeholder="{{ entry_answertext }}" class="form-control" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+            	<div class="col-sm-12">
+	                <label class="col-sm-2 control-label" for="input-captchastatus"><span data-toggle="tooltip" title="{{ help_captchastatus }}">{{ entry_captchastatus }}</span></label>
+	                <div class="col-sm-10">
+	                  <select name="questions_captchastatus" id="input-captchastatus" class="form-control">
+	                    {% if questions_captchastatus %}
+                    	<option value="1" selected="selected">{{ text_enabled }}</option>
+                    	<option value="0">{{ text_disabled }}</option>
+	                    {% else %}
+	                    <option value="1">{{ text_enabled }}</option>
+	                    <option value="0" selected="selected">{{ text_disabled }}</option>
+	                    {% endif %}
+	                  </select>
+	                </div>
+                </div>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+<script src="view/javascript/colorbox/jquery.minicolors.js"></script>
+<link rel="stylesheet" href="view/stylesheet/jquery.minicolors.css">
+<script>
+		$(document).ready( function() {
+			
+            $('.demo').each( function() {
+               		$(this).minicolors({
+					control: $(this).attr('data-control') || 'hue',
+					defaultValue: $(this).attr('data-defaultValue') || '',
+					inline: $(this).attr('data-inline') === 'true',
+					letterCase: $(this).attr('data-letterCase') || 'lowercase',
+					opacity: $(this).attr('data-opacity'),
+					position: $(this).attr('data-position') || 'bottom left',
+					change: function(hex, opacity) {
+						if( !hex ) return;
+						if( opacity ) hex += ', ' + opacity;
+						try {
+							console.log(hex);
+						} catch(e) {}
+					},
+					theme: 'bootstrap'
+				});
+                
+            });
+			
+		});
+</script>
+<style>
+    .minicolors-theme-bootstrap .minicolors-input{height:33px;}
+</style>
+</div>
+{{ footer }}

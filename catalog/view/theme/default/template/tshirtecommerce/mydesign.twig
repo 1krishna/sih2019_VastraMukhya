@@ -1,0 +1,92 @@
+{{ header }}
+<script>
+	var mydesign_ajax_del_link = '{{ mydesign_ajax_del_link }}';
+	var tshirtecommerce_design_confirm_delete = '{{ tshirtecommerce_design_confirm_delete }}';
+	var tshirtecommerce_design_search_link = '{{ tshirtecommerce_design_search_link }}';
+</script>
+
+<link rel="stylesheet" type="text/css" href="{{ site_url }}/tshirtecommerce/opencart/new/css/fontawesome-all.css">
+<link rel="stylesheet" type="text/css" href="{{ site_url }}/tshirtecommerce/opencart/new/css/xbootstrap.css">
+<link rel="stylesheet" type="text/css" href="{{ site_url }}/tshirtecommerce/opencart/mydesign.css">
+
+<script src="{{ site_url }}/tshirtecommerce/opencart/new/xjquery-3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
+<!--
+<script src="{{ site_url }}/tshirtecommerce/opencart/new/js/xpopper.js" type="text/javascript" charset="utf-8"></script>
+<script src="{{ site_url }}/tshirtecommerce/opencart/new/js/xbootstrap.js" type="text/javascript" charset="utf-8"></script>
+-->
+<script src="{{ site_url }}/tshirtecommerce/opencart/mydesign.js" type="text/javascript" charset="utf-8"></script>
+
+<div class="container">
+	<ul class="breadcrumb">
+		{% for breadcrumb in breadcrumbs %}
+	    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+	    {% endfor %}
+	</ul>
+
+	<div class="row">
+		<div id="content">
+			<div id="tsemydesign" class="tshirtecommerce-mydesign">
+				<div class="container-fluid">
+					<h3 class="form-group">{{ design_title }}</h3>
+					<div class="btn-toolbar" role="toolbar">
+						<div class="input-group">
+							<input type="text" class="form-control" value="{{ search_value }}" id="tsedesign" name="design" placeholder="{{ tshirtecommerce_design_search_holder }}">
+							<div class="input-group-append">
+								<button class="btn btn-outline-default" onclick="tsemydesign.search()" type="button"><i class="xfas xfa-search"></i></button>
+							</div>
+						</div>
+
+						<div class="btn-group float-right" role="group">
+							<a target="_blank" href="{{ design_your_own }}" class="btn btn-success"><i class="xfas xfa-plus"></i> {{ button_create_design }}</a>
+						</div>
+					</div>
+
+					<div class="row" id="tsemydesign-list">
+						{% if designs|length > 0 %}
+							{% for design in designs %}
+							<div class="col-sm-3" id="my-design-{{ design.id }}">
+								<div class="card card-mydesign">
+									<div class="card-img-top">
+										<div class="quickshare">
+											<div class="xql">
+												<a href="javascript:void(0)" onclick="tsemydesign.delete('{{ design.id }}')" data-toggle="tooltip" title="{{ design_delete_text }}"><i class="xfas xfa-times"></i></a>
+											</div>
+											<div class="xqr">
+												<a href="{{ design.fblink }}" target="_blank" data-toggle="tooltip" title="{{ design_share_facebook_text }}"><i class="xfab xfa-facebook-square"></i></a>
+												<a href="{{ design.twlink }}" target="_blank" data-toggle="tooltip" title="{{ design_share_twitter_text }}"><i class="xfab xfa-twitter-square"></i></a>
+												<a href="{{ design.prlink }}" target="_blank" data-toggle="tooltip" title="{{ design_share_pinterest_text }}"><i class="xfab xfa-pinterest-square"></i></a>
+												<!--
+												<a href="{{ design.iglink }}" target="_blank" data-toggle="tooltip" title="{{ design_share_instagram_text }}"><i class="xfab xfa-instagram"></i></a>
+											-->
+											</div>
+										</div>
+										<a href="{{ design.view_link }}" target="_blank">
+											<img src="{{ site_url }}/tshirtecommerce/{{ design.image }}" alt="{{ design.title }}">
+										</a>
+									</div>
+									<div class="card-body">
+										<p class="card-text"><a href="{{ design.view_link }}" target="_blank" class="text-truncate">{{ design.title }}</a></p>
+									</div>
+								</div>
+							</div>
+							{% endfor %}
+						{% else %}
+							<div class="col-sm-12">
+								<div class="alert alert-danger" role="alert">
+  									{{ tshirtecommerce_design_not_found }}
+								</div>
+							</div>
+						{% endif %}
+					</div>
+					{% if designs|length > 0 %}
+					<div class="row">
+				        <div class="col-sm-6 text-left">{{ pagination }}</div>
+				        <div class="col-sm-6 text-right">{{ results }}</div>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{{ footer }}

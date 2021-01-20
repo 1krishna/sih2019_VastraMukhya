@@ -1,0 +1,219 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+         {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    {% if success %}
+    <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-list"></i> {{ text_list }}</h3>
+      </div>
+      <div class="panel-body">
+		<div class="well">
+			<div class="row">
+				<div class="col-sm-3">
+					<div class="form-group">
+						  <label class="control-label" for="input-filter_seller">{{ column_seller }}</label>
+						  <input type="text" name="filter_seller" value="{{ sellernme }}" placeholder="{{ column_seller }}" id="input-filter_seller" class="form-control"/>
+						  <input type="hidden" name="vendor_id" value=""/>
+					</div>
+				</div>
+				<!--02-june-2018-->
+				<div class="col-sm-3">
+			      <div class="form-group">
+			        <label class="control-label">{{ column_date }}</label>
+			        <div class="input-group ">
+			          <span class="input-group-addon">
+			            {{ entry_from }}
+			          </span>
+			          <input type="text" name="filter_from" value="{{ filter_from }}" class="form-control date" data-date-format="YYYY-MM-DD" id="input-filter_form"/>
+			          <span class="input-group-addon ">
+			            {{ entry_to }}
+			          </span>
+			          <input type="text" name="filter_to" value="{{ filter_to }}" class="form-control date" data-date-format="YYYY-MM-DD" id="input-filter_to"/>
+			        </div>
+			      </div>
+			    </div>
+			    <!--02-june-2018-->
+				<div class="col-sm-2 text-center">
+					<button type="button" style="margin-top:25%;" id="button-filter" class="btn btn-primary"><i class="fa fa-filter"></i> {{ button_filter }}</button>
+				</div>
+			</div>
+		</div>	  
+    <form action="" method="post" enctype="multipart/form-data" id="form-commission">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+				<thead>
+					<tr>
+						<td class="text-left">{% if sort == 'seller' %}
+							<a href="{{ sort_seller }}" class="{{ order|lower }}">{{ column_seller }}</a>
+							{% else %}
+							<a href="{{ sort_seller }}">{{ column_seller }}</a>
+							{% endif %}
+						</td>
+						
+						<td class="text-left">{% if sort == 'name' %}
+							<a href="{{ sort_name }}" class="{{ order|lower }}">{{ column_name }}</a>
+							{% else %}
+							<a href="{{ sort_name }}">{{ column_name }}</a>
+							{% endif %}
+						</td>
+						
+						<td class="text-left">{% if sort == 'model' %}
+							<a href="{{ sort_model }}" class="{{ order|lower }}">{{ column_model }}</a>
+							{% else %}
+							<a href="{{ sort_model }}">{{ column_model }}</a>
+							{% endif %}
+						</td>
+						
+						<td class="text-left">{% if sort == 'qty' %}
+							<a href="{{ sort_qty }}" class="{{ order|lower }}">{{ column_qty }}</a>
+							{% else %}
+							<a href="{{ sort_qty }}">{{ column_qty }}</a>
+							{% endif %}
+						</td>
+						
+						<td class="text-left">{% if sort == 'price' %}
+							<a href="{{ sort_price }}" class="{{ order|lower }}">{{ column_price }}</a>
+							{% else %}
+							<a href="{{ sort_price }}">{{ column_price }}</a>
+							{% endif %}
+						</td>
+						
+						<td class="text-left">{% if sort == 'percentage' %}
+							<a href="{{ sort_percentage }}" class="{{ order|lower }}">{{ column_percentage }}</a>
+							{% else %}
+							<a href="{{ sort_percentage }}">{{ column_percentage }}</a>
+							{% endif %}
+						</td>
+						
+						<td class="text-left">{% if sort == 'fixed' %}
+							<a href="{{ sort_fixed }}" class="{{ order|lower }}">{{ column_fixed }}</a>
+							{% else %}
+							<a href="{{ sort_fixed }}">{{ column_fixed }}</a>
+							{% endif %}
+						</td>
+						
+						<td class="text-left">{{ column_total }}</td>
+						
+						<td class="text-left">{% if sort == 'date' %}
+							<a href="{{ sort_date }}" class="{{ order|lower }}">{{ column_date }}</a>
+							{% else %}
+							<a href="{{ sort_date }}">{{ column_date }}</a>
+							{% endif %}
+						</td>
+							
+					</tr>
+				</thead>
+					{% if commissionreports %}
+					{% for report in commissionreports %}
+					<tr>
+						<td class="text-left">{{ report.sellername }}</td>
+						<td class="text-left">{{ report.name }}</td>
+						<td class="text-left">{{ report.model }}</td>
+						<td class="text-left">{{ report.quantity }}</td>
+						<td class="text-left">{{ report.price }}</td>
+						<td class="text-left">{{ report.commissionper }}</td>
+						<td class="text-left">{{ report.commissionfix }}</td>
+						<td class="text-left">{{ report.totalcommission }}</td>
+						<td class="text-left">{{ report.date_added }}</td>
+					</tr>
+						{% endfor %} 
+						{% else %}
+					<tr>
+						<td class="text-center" colspan="10">{{ text_no_results }}</td>
+					</tr>
+					{% endif %}
+            </table>
+        </div>
+    </form>
+        <div class="row">
+			<div class="col-sm-6 text-left">{{ pagination }}</div>
+          	<div class="col-sm-6 text-right">{{ results }}</div>
+        </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+$('#button-filter').on('click', function() {
+	var url = 'index.php?route=vendor/commission_report&user_token={{ user_token }}';
+	
+	var filter_seller = $('input[name=\'vendor_id\']').val();
+
+	if (filter_seller) {
+		url += '&filter_seller=' + encodeURIComponent(filter_seller);
+	}
+		
+	var filter_from = $('input[name=\'filter_from\']').val();
+
+	if (filter_from) {
+		url += '&filter_from=' + encodeURIComponent(filter_from);
+	}
+	
+	var filter_to = $('input[name=\'filter_to\']').val();
+
+	if (filter_to) {
+		url += '&filter_to=' + encodeURIComponent(filter_to);
+	}
+	
+		
+  location = url;
+});
+</script>
+
+<script type="text/javascript"><!--
+	  
+// Seller
+$('input[name=\'filter_seller\']').autocomplete({
+	'source': function(request, response) {
+		$.ajax({
+			url: 'index.php?route=vendor/vendor/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+			dataType: 'json',
+			success: function(json) {
+				json.unshift({
+					vendor_id: 0,
+					firstname: '{{ text_none }}'
+				});
+
+				response($.map(json, function(item) {
+					return {
+						label: item['firstname'],
+						value: item['vendor_id']
+					}
+				}));
+			}
+		});
+	},
+	'select': function(item) {
+		$('input[name=\'filter_seller\']').val(item['label']);
+		$('input[name=\'vendor_id\']').val(item['value']);
+	}
+});
+</script>
+
+ <script type="text/javascript"><!--
+$('.date').datetimepicker({
+	pickTime: false
+});
+//--></script>
+
+{{ footer }}

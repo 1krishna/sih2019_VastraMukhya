@@ -1,0 +1,153 @@
+#designer-app .modal-header button.close{background-color:#f65e13;border:1px solid #2d5c88;border-radius:0 0 0 4px;color:#fff;height:30px;line-height:8px;margin:0;opacity:1;padding:4px;width:30px}
+#products-admin .design-tab-content{display:table;width:100%}
+#products-admin .tab-content{background-color:#FFF;padding-top:20px;max-height:500px;overflow:auto;width:100%}
+#products-admin ul.nav-tabs{padding-left:15px}
+#designer-products .modal-content{background-color:#FCFCFC}
+#designer-products .modal-header{border:0 none;display:block;float:right;margin:0;padding:0;position:absolute;right:0;top:0;z-index:100}
+#products-admin .nav.nav-tabs{margin:0}
+#designer-products .modal-body{padding:15px 0 0;z-index:1}
+#designer-products .modal-header .close-list-design{margin:5px 5px 5px 0;width:30px;height:30px}
+#products-admin .design-tab-content > div.dataTables_paginate{border-top:1px solid #ccc;float:right;text-align:right;width:100%}
+#products-admin .design-tab-content > div.list-products > div{float:none;display:inline-block}
+.img-thumbnail.add-link{font-size:12px;overflow:hidden}
+
+#products-admin .list-products .img-thumbnail img { 
+	max-width: 100%;
+	max-height: 200px;
+}
+
+#designer-products.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: hidden; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+/* Modal Content */
+#designer-products .modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+}
+#designer-products .modal-body {padding: 2px 16px;}
+#designer-products .modal-header {
+    padding: 2px 16px;
+    color: #000;
+}
+/* The Close Button */
+#designer-products .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+#designer-products .close:hover,
+#designer-products .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+#products-admin ul > li {
+	list-style: none;
+}
+#products-admin ul li.active {
+	width: 100%;
+	font-size: medium;
+	text-decoration: none;
+	padding-bottom: 5px;
+}
+#products-admin ul li a {
+	text-decoration: none;
+}
+#products-admin ul.nav-tabs {
+	padding-left: 0;
+}
+#products-admin .design-tab-content > div.dataTables_paginate {
+	border: none;
+}
+#products-admin .list-products p {
+	margin: 0!important;
+	padding: 0!important;
+}
+#products-admin .nav.nav-tabs {
+	margin-bottom: 5px;
+}
+.list-products .col-xs-4 {
+	width: 33.33333333%;
+}
+.list-products .col-sm-3 {
+	width: 25%;
+}
+.list-products .col-md-2 {
+	width: 16.66666667%;
+}
+.list-products .img-thumbnail{
+	display: inline-block;
+    max-width: 100%;
+    height: auto;
+    padding: 4px;
+    line-height: 1.42857143;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    -webkit-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+
+/* Button Group */
+.btn-group, .tshirtecommerce-dropdown {
+	display: inline-block;
+	line-height: 1.2rem;
+	min-width: 100px;
+}
+a.btn, .tshirtecommerce-dropdown {
+    padding: 6px 8px;
+}
+.btn-group a, .tshirtecommerce-dropdown a {
+	text-decoration: none;
+	display: block;
+}
+.btn-group {
+	background-color: #DBDBDB;
+	color: #000;
+	text-align: center;
+}
+.tshirtecommerce-dropdown {
+    position: relative;
+    background-color: #0070c9;
+    color: #ffffff;
+}
+.tshirtecommerce-dropdown > span {
+	position: relative;
+    margin-right: 24px;
+}
+.tshirtecommerce-dropdown > span > i {
+	position: absolute;
+    right: -24px;
+    top: -5px;
+}
+.tshirtecommerce-dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 12px 16px;
+    z-index: 1;
+}
+.tshirtecommerce-dropdown:hover .tshirtecommerce-dropdown-content {
+    display: block;
+}
+.tshirtecommerce-dropdown-content > p > a:hover {
+	text-decoration: underline;
+}

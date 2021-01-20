@@ -1,0 +1,60 @@
+<div class="vendorfeatured module-products-27">
+<h3 class="vendorhead">{{ heading_title }}</h3>
+<div class="product-grid">
+  {% for product in products %}
+  <div class="product-layout  has-zero-price has-extra-button">
+    <div class="product-thumb transition">
+      <div class="image"><a href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-responsive" /></a></div>
+      <div class="caption">
+        <div class="name"><a href="{{ product['href'] }}">{{ product['name'] }}</a></div>
+        <div class="description">{{ product['description'] }}</div>
+        {% if product.rating %}
+        <div class="rating">
+          <div class="rating-stars">
+          {% for i in 5 %}
+          {% if product.rating < i %}
+          <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+          {% else %}
+          <span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>
+          {% endif %}
+          {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+        {% if product.price %}
+        <p class="price">
+          {% if not product.special %}
+          {{ product.price }}
+          {% else %}
+          <span class="price-new">{{ product.special }}</span> <span class="price-old">{{ product.price }}</span>
+          {% endif %}
+          {% if product.tax %}
+          <span class="price-tax">{{ text_tax }} {{ product.tax }}</span>
+          {% endif %}
+        </p>
+        {% endif %}
+      </div>
+      <div class="sellerinfo">
+         <div class="image"><a href="{{ product.href }}"><img src="{{ product.sellerimage }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-responsive" /></a></div>
+         <div class="seller-detail">
+            <h3>{{ product.storename }}</h3> 
+            <h4><a href="{{ product.profile }}">{{ product.sellername }}</a></h4>
+             <p>From <i class="fa fa-home"></i>  {{ product.countryname }}</p>
+         </div>
+      </div>
+      <div class="buttons-wrapper">
+      <div class="button-group">
+        <div class="cart-group">
+        <a class="btn btn-cart" onclick="cart.add('{{ product.product_id }}');"><span class="btn-text">{{ button_cart }}</span></a>
+        </div>
+        <div class="wish-group">
+        <a class="btn btn-wishlist" data-toggle="tooltip" title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');"><span class="btn-text">{{ button_wishlist }}</span></a>
+        <a class="btn btn-compare" data-toggle="tooltip" title="{{ button_compare }}" onclick="compare.add('{{ product.product_id }}');"><span class="btn-text">{{ button_compare }}</span></a>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+</div>

@@ -1,0 +1,41 @@
+div#designer-products .modal-dialog.modal-lg { width: 95% !important; }
+#design-template .design-tab-content .img-thumbnail { position: relative; }
+div#design-template .img-thumbnail span.design_title {
+	position: absolute;
+    background: #000000;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    color: #ffffff;
+    text-align: center;
+    padding: 5px;
+    opacity: 0.45;
+    border-radius: 0px 0px 2px 2px; }
+.fa-tshirtecommerce {
+    background-image: url('http://dev.9file.net/pro/wp-content/plugins/tshirtecommerce/logo.svg');
+    background-repeat: no-repeat; 
+    width: 20px; 
+    height: 20px; 
+	float: left;}
+#form-customization img.img-responsive {
+    border: 1px solid #cdcdcd; 
+    padding: 2px; 
+    width: auto;
+    text-align: center; }
+
+/* Loading modal */
+.tshirtecommerce-seo-urls-panel { position: relative; }
+.tshirtecommerce-loading-modal, .tshirtecommerce-loading-modal img { position: absolute; }
+.tshirtecommerce-loading-modal {
+    width: 100%;height: 100%;
+    left: 0;top: 0;right: 0;bottom: 0;
+    background-color: rgba(0,0,0,.5);
+    z-index: 99999999999999;
+    display: none; }
+.tshirtecommerce-loading-modal img {
+    display: block;
+    top: 50%;left: 50%;
+    max-width: 60px; }
+.tshirtecommerce-seo-urls-table {
+    overflow-y: scroll;
+    max-height: 500px; }

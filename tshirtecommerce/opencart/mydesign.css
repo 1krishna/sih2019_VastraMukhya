@@ -1,0 +1,128 @@
+#tsemydesign * {
+	font-size: 14px!important;
+}
+#tsemydesign h3 {
+	font-size: 20px!important;
+}
+#tsemydesign-list {
+	width: 100%;
+	clear: both;
+	overflow: hidden;
+	display: block;
+	margin-top: 20px;
+}
+.card-mydesign {
+	margin-bottom: 20px;
+}
+.card-mydesign .card-img-top {
+	position: relative;
+	overflow: hidden;
+	display: block;
+	z-index: 99;
+}
+.card-mydesign .card-img-top img {
+	width: 100%;
+	overflow: hidden;
+	opacity: 1;
+}
+.card-mydesign .card-img-top .quickshare {
+	position: absolute;
+	top: 0;
+	height: auto;
+	left: 0;
+	right: 0;
+	padding: 8px;
+	background-color: transparent;
+	opacity: 0;
+	z-index: 101;
+	-webkit-transition: all 0.35s ease;
+	transition: all 0.35s ease;
+}
+.card-mydesign .card-img-top .quickshare i.xfa-times {
+	color: red;
+}
+.card-mydesign .card-img-top .quickshare i.xfa-facebook-square {
+	color: #4267b2;
+}
+.card-mydesign .card-img-top .quickshare i.xfa-twitter-square {
+	color: #1da1f2;
+}
+.card-mydesign .card-img-top .quickshare i.xfa-pinterest-square {
+	color: #bd081c;
+}
+.card-mydesign .card-img-top .quickshare i.xfa-instagram {
+	color: #FF0000;
+}
+.card-mydesign .card-img-top .quickshare i:before {
+	font-size: 22px!important;
+}
+.card-mydesign .card-img-top:hover .quickshare {
+	opacity: 1;
+}
+.card-mydesign .card-img-top .quickshare > div {
+	display: inline-block;
+	width: auto;
+}
+.card-mydesign .card-img-top .quickshare > div.xql {
+	float: left;
+}
+.card-mydesign .card-img-top .quickshare > div.xqr {
+	float: right;
+}
+.card-mydesign .card-img-top .quickview {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	width: 80px;
+	height: 80px;
+	margin: auto;
+	opacity: 0;
+	-webkit-transition: all 0.4s ease 0s;
+	transition: all 0.4s ease 0s;
+	background-color: transparent;
+	z-index: 100;
+}
+.card-mydesign .card-img-top:hover .quickview {
+	opacity: .9;
+}
+.card-mydesign .card-img-top:hover img {
+	/*opacity: .75;*/
+}
+.card-mydesign .card-img-top .quickview .quickview {
+	text-transform: uppercase;
+	background-color: #333!important;
+	color: #fff;
+	font-family: Roboto;
+	font-weight: 300;
+	font-size: 14px;
+	display: block;
+	padding: 0px;
+	width: 80px;
+	height: 80px;
+	text-align: center;
+	line-height: 80px;
+	border: 1px solid #999;
+	border-radius: 50%;
+	-webkit-transition: all 0.35s ease;
+	transition: all 0.35s ease;
+}
+.card-mydesign .card-img-top .quickview .quickview i {
+	color: #fff;
+	font-weight: 700;
+}
+.card-mydesign .card-img-top .quickview .quickview i:before {
+	font-size: 20px !important;
+}
+.card-mydesign .card-img-top .quickview .quick-view:hover {
+    background-color: #d8c397;
+    border: 1px solid #d8c397;
+    color: #fff;
+    -webkit-transition: all 0.35s ease;
+    transition: all 0.35s ease;
+}
+.card-mydesign .card-text {
+	text-align: center;
+	font-weight: 600;
+}

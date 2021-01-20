@@ -1,0 +1,147 @@
+.mydesign-btn {
+	color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+    padding: 1.5rem .75rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    text-decoration: none;
+
+    width: 100%;
+    overflow: hidden;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    font: 600 16px/20px "Open Sans", sans-serif;
+}
+.mydesign-btn:hover{
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+.mydesign-btn,.mydesign-btn:focus,.mbtn:focus,.mydesign-btn:active,.mbtn:active, .mydesign-btn:hover,.mbtn:hover {
+	text-decoration: none;
+	color: #fff;
+}
+
+#tshirtecommercemydesign {
+	width: 100%;
+	position: relative;
+	height: auto;
+    overflow: hidden;
+}
+
+.mbtn, .mydesign-btn {
+	display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: 1rem 1.2rem;
+    line-height: 1.25;
+    border-radius: .25rem;
+    transition: all .15s ease-in-out;
+    cursor: pointer;
+}
+
+.mbtn-primary {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.mbtn-primary:hover {
+    color: #fff;
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
+
+.mydesign-item {
+	padding:  5px;
+	position: relative;
+	overflow: hidden;
+}
+.mydesign-item img:hover {
+	border: 1px solid #007bff;
+}
+.mydesign-item img {
+	background-color: rgb(255, 255, 255);
+    max-width: 100%;
+    height: auto;
+    padding: 0.25rem;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(221, 221, 221);
+    border-image: initial;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease-in-out;
+}
+
+@media screen and (min-width: 768px) {
+	.mydesign-item {
+		float: left;
+		width: 20%;
+	}
+}
+@media screen and (max-width: 768px) {
+	.mydesign-item {
+		float: left;
+		width: 25%;
+	}
+}
+.iconclear {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	color: #D50000;
+	cursor: pointer;
+}
+.iconclear:hover > i {
+	font-weight: 600;
+}
+
+#mydesign_continue {
+	text-align: center;
+	width: 100%;
+	clear: both;
+}
+.tshirtecommerce-design-loadmore {
+    min-width: 20%;
+    text-align: center;
+    color: #111;
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+.tshirtecommerce-design-loadmore:hover {
+    color: #111;
+    background-color: #e0a800;
+    border-color: #d39e00;
+}
+
+@media screen and (max-width: 640px) {
+	.tshirtecommerce-design-loadmore {
+		min-width: 100%;
+	}
+}
+
+.tshirtecommerce-loading {
+	width: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-image: url('../img/tshirtecommerce-loading.svg');
+	background-position: center;
+	background-repeat: no-repeat;
+	z-index: 999999999;
+	background-color: #eee;
+	opacity: 0.8;
+	transition: opacity .15s linear;
+	display: none;
+}

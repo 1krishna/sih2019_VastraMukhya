@@ -1,0 +1,223 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-module" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-module" class="form-horizontal">
+		
+		  <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab-settings" data-toggle="tab">{{ tab_settings }}</a></li>
+			<li><a href="#tab-auth" data-toggle="tab">{{ tab_auth }}</a></li>
+            <li><a href="#tab-analytics" data-toggle="tab">{{ tab_analytics }}</a></li>
+			<li><a href="#tab-push" data-toggle="tab">{{ tab_push }}</a></li>
+          </ul>
+		
+		
+		<div class="tab-content">
+			<div class="tab-pane active" id="tab-settings">
+				  <div class="form-group">
+					<label class="col-sm-2 control-label" for="input-status">
+						<span data-toggle="tooltip" title="{{ help_mobile_user_group }}">{{ entry_mobile_user_group }}</span>
+					</label>
+					<div class="col-sm-10">
+					  <select name="i2csmobile_mobile_user_group" id="input-customer-group" class="form-control">
+						{% for customer_group in customer_groups %}
+						{% if customer_group['customer_group_id'] == i2csmobile_mobile_user_group %}
+						<option value="{{ customer_group['customer_group_id'] }}" selected="selected">{{ customer_group['name'] }}</option>
+						{% else %}
+						<option value="{{ customer_group['customer_group_id'] }}">{{ customer_group['name'] }}</option>
+						{% endif %}
+						{% endfor %}
+					  </select>
+					</div>
+				  </div>
+				  <div class="form-group">
+					<label class="col-sm-2 control-label" for="input-banner">
+						<span data-toggle="tooltip" title="{{ help_main_banner }}">{{ entry_main_banner }}</span>
+					</label>
+					<div class="col-sm-10">
+					  <select name="i2csmobile_main_banner" id="input-banner" class="form-control">
+						{% for banner in banners %}
+						{% if banner['banner_id'] == i2csmobile_main_banner %}
+						<option value="{{ banner['banner_id'] }}" selected="selected">{{ banner['name'] }}</option>
+						{% else %}
+						<option value="{{ banner['banner_id'] }}">{{ banner['name'] }}</option>
+						{% endif %}
+						{% endfor %}
+					  </select>
+					</div>
+				  </div>
+				  <div class="form-group">
+					<label class="col-sm-2 control-label" for="input-banner">
+						<span data-toggle="tooltip" title="{{ help_offer_banner }}">{{ entry_offer_banner }}</span>
+					</label>
+					<div class="col-sm-10">
+					  <select name="i2csmobile_offer_banner" id="input-banner" class="form-control">
+						{% for banner in banners %}
+						{% if banner['banner_id'] == i2csmobile_offer_banner %}
+						<option value="{{ banner['banner_id'] }}" selected="selected">{{ banner['name'] }}</option>
+						{% else %}
+						<option value="{{ banner['banner_id'] }}">{{ banner['name'] }}</option>
+						{% endif %}
+						{% endfor %}
+					  </select>
+					</div>
+				  </div>
+				  <div class="form-group">
+					<label class="col-sm-2 control-label" for="input-banner">
+						<span data-toggle="tooltip" title="{{ help_offers_module_banner }}">{{ entry_offers_module_banner }}</span>
+					</label>
+					<div class="col-sm-10">
+					  <select name="i2csmobile_offers_module_banner" id="input-banner" class="form-control">
+						{% for banner in banners %}
+						{% if banner['banner_id'] == i2csmobile_offers_module_banner %}
+						<option value="{{ banner['banner_id'] }}" selected="selected">{{ banner['name'] }}</option>
+						{% else %}
+						<option value="{{ banner['banner_id'] }}">{{ banner['name'] }}</option>
+						{% endif %}
+						{% endfor %}
+					  </select>
+					</div>
+				  </div>
+				  <div class="form-group">
+					<label class="col-sm-2 control-label" for="input-banner">
+						<span data-toggle="tooltip" title="{{ help_featured_module }}">{{ entry_featured_module }}</span>
+					</label>
+					<div class="col-sm-10">
+					  <select name="i2csmobile_featured_module" id="input-banner" class="form-control">
+						{% for module in featured_modules %}
+						{% if module['module_id'] == i2csmobile_featured_module %}
+						<option value="{{ module['module_id'] }}" selected="selected">{{ module['name'] }}</option>
+						{% else %}
+						<option value="{{ module['module_id'] }}">{{ module['name'] }}</option>
+						{% endif %}
+						{% endfor %}
+					  </select>
+					</div>
+				  </div>
+				  <div class="form-group">
+						<label class="col-sm-2 control-label" for="input-category"><span data-toggle="tooltip" title="{{ help_category }}">{{ entry_category }}</span></label>
+						<div class="col-sm-10">
+						  <input type="text" name="category" value="" placeholder="{{ entry_category }}" id="input-category" class="form-control" />
+						  <div id="product-category" class="well well-sm" style="height: 150px; overflow: auto;">
+							{% for product_category in product_categories %}
+							<div id="product-category{{ product_category['category_id'] }}"><i class="fa fa-minus-circle"></i> {{ product_category['name'] }}
+							  <input type="hidden" name="product_category[]" value="{{ product_category['category_id'] }}" />
+							</div>
+							{% endfor %}
+						  </div>
+						</div>
+				  </div>
+			   </div>
+			   
+			<div class="tab-pane" id="tab-auth">
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="input-status">
+						<span data-toggle="tooltip" title="{{ help_auth_google }}">{{ entry_auth_google }}</span>
+					</label>
+					<div class="col-sm-4">
+						<input type="text" name="i2csmobile_auth_google_id" value="{{ i2csmobile_auth_google_id }}" placeholder="{{ entry_auth_google_id }}" id="entry-i2csmobile_auth_google_id" class="form-control"/>
+					</div>
+					<div class="col-sm-4">
+						<input type="text" name="i2csmobile_auth_google_secret" value="{{ i2csmobile_auth_google_secret }}" placeholder="{{ entry_auth_google_secret }}" id="entry-i2csmobile_auth_google_secret" class="form-control"/>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="input-status">
+						<span data-toggle="tooltip" title="{{ help_auth_facebook }}">{{ entry_auth_facebook }}</span>
+					</label>
+					<div class="col-sm-4">
+						<input type="text" name="i2csmobile_auth_facebook_id" value="{{ i2csmobile_auth_facebook_id }}" placeholder="{{ entry_auth_facebook_id }}" id="entry-i2csmobile_auth_facebook_id" class="form-control"/>
+					</div>
+					<div class="col-sm-4">
+						<input type="text" name="i2csmobile_auth_facebook_secret" value="{{ i2csmobile_auth_facebook_secret }}" placeholder="{{ entry_auth_facebook_secret }}" id="entry-i2csmobile_auth_facebook_secret" class="form-control"/>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="input-status">
+						<span data-toggle="tooltip" title="{{ help_auth_twitter }}">{{ entry_auth_twitter }}</span>
+					</label>
+					<div class="col-sm-4">
+						<input type="text" name="i2csmobile_auth_twitter_key" value="{{ i2csmobile_auth_twitter_key }}" placeholder="{{ entry_auth_twitter_key }}" id="entry-i2csmobile_auth_twitter_key" class="form-control"/>
+					</div>
+					<div class="col-sm-4">
+						<input type="text" name="i2csmobile_auth_twitter_secret" value="{{ i2csmobile_auth_twitter_secret }}" placeholder="{{ entry_auth_twitter_secret }}" id="entry-i2csmobile_auth_twitter_secret" class="form-control"/>
+					</div>
+				</div>
+			</div>
+
+			<div class="tab-pane" id="tab-analytics">
+				<div class="alert alert-info">
+					{{ help_analytics }}
+				</div>
+			</div>
+
+			<div class="tab-pane" id="tab-push">
+				<div class="alert alert-info">
+					{{ help_push }}
+				</div>
+			</div>
+			</div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <script type="text/javascript">
+  // Category
+$('input[name=\'category\']').autocomplete({
+	'source': function(request, response) {
+		$.ajax({
+			url: 'index.php?route=catalog/category/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+			dataType: 'json',
+			success: function(json) {
+				response($.map(json, function(item) {
+					return {
+						label: item['name'],
+						value: item['category_id']
+					}
+				}));
+			}
+		});
+	},
+	'select': function(item) {
+		$('input[name=\'category\']').val('');
+
+		$('#product-category' + item['value']).remove();
+
+		$('#product-category').append('<div id="product-category' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product_category[]" value="' + item['value'] + '" /></div>');
+	}
+});
+
+$('#product-category').delegate('.fa-minus-circle', 'click', function() {
+	$(this).parent().remove();
+});
+  </script>
+  
+  
+</div>
+{{ footer }}

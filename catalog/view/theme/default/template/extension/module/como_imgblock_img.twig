@@ -1,0 +1,14 @@
+<div class="homecontainer" style="{% if img_block_background %}background-image: url('{{ img_block_background }}');{% endif %}">
+  {% for i in 1..img_number %}
+    {% if img_block_links[i] %}<a href="{{ img_block_links[i] }}" title="{{ img_block_titles[i] }}">{% endif %}
+        <div class="homebox{% if not img_block_images1[i] %} grow{% endif %}">
+            <img src="{{ img_block_images[i] }}" alt=""
+            {% if img_block_images1[i] %}
+                onmouseover="this.src='{{ img_block_images1[i] }}'"
+                onmouseout="this.src='{{ img_block_images[i] }}'" 
+            {% endif %}
+            class="img-responsive" />
+        </div>
+    {% if img_block_links[i] %}</a>{% endif %}
+  {% endfor %}
+</div>

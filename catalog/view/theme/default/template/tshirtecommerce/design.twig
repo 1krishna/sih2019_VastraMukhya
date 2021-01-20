@@ -1,0 +1,28 @@
+{{ header }}
+
+<div id="container" class="container">
+	<ul class="breadcrumb">
+	    {% for breadcrumb in breadcrumbs %}
+	    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+	    {% endfor %}
+	</ul>
+	<div style="margin-top:15px">
+		{{ content }}
+	</div>
+</div>
+
+<link href="{{ url }}/tshirtecommerce/opencart/css/opencart.css?v={{ random() }}" rel="stylesheet">
+<link href="{{ url }}/tshirtecommerce/opencart/css/mobile.css?v={{ random() }}" rel="stylesheet">
+
+<script type="text/javascript">
+	var urlBack 		= '{{ url }}/index.php?route=product/product&product_id={{ parent_id }}';	
+	var urlDesign 		= '{{ url }}/index.php?route=tshirtecommerce/designer';
+	var urlDesignload 	= '{{ urlDesignload }}';
+	var _product_id_oc 	= '{{ parent_id }}';
+	var ocedit 			= '{{ edit }}';
+	var logo_loading 	= '{{ tshirtecommerce_logo_loading }}';
+	var text_loading 	= '{{ tshirtecommerce_text_loading }}';
+</script>
+<script src="{{ url }}/tshirtecommerce/opencart/js/app.js?v={{ random() }}" type="text/javascript"></script>
+
+{{ footer }} 

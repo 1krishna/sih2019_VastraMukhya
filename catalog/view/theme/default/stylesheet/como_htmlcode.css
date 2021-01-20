@@ -1,0 +1,55 @@
+﻿.homecontainer {
+    background-color: #fafafa;
+    background-size: 100% 100%;
+    overflow: hidden;
+    padding: 20px;
+    /*margin: 0 -15px 0 -15px;*/
+}
+@media (max-width: 500px) {
+    .homecontainer {
+        padding: 2%;
+    }
+}
+
+.homebox {
+    max-width: 332px;
+    max-height: 220px;
+    border: 2px solid #ddd;
+    margin: 1.5%; /*margin: 20px;*/
+    float: left;
+    background-size: 100% 100%;
+    overflow: hidden;
+}
+
+.homebox img {
+    width: 332px;
+    height: 220px;
+	-webkit-transition: all 1s ease;
+	-moz-transition: all 1s ease;
+	-o-transition: all 1s ease;
+	-ms-transition: all 1s ease;
+	transition: all 1s ease;
+}
+@media (max-width: 500px) {
+    .homebox img {
+        width: auto;
+        height: auto;
+    }
+}
+
+.grow img:hover {
+	width: 365px;
+	height: 242px;
+}
+.box .box-heading img {
+    float: left;
+    margin-right: 5px;
+}
+.box .box-heading {
+    padding-left: 3px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: #eee;
+	font-size: 14px;
+	font-weight:bold;
+}

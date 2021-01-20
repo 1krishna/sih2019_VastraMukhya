@@ -1,0 +1,103 @@
+{{ header }}{{ column_left }}
+<div id="content">
+   <div class="page-header">
+		<div class="container-fluid">
+		   <div class="pull-right">
+			<button type="submit" form="form-questions" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary hide"><i class="fa fa-save"></i></button>
+			<a href="{{ cancel }}" data-toggle="tooltip" title="cancel" class="btn btn-default"><i class="fa fa-reply"></i></a>
+			
+		   </div>
+		   <h1>{{ heading_title }}</h1>
+		   <ul class="breadcrumb">
+			{% for breadcrumb in breadcrumbs %}
+			<li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+			{% endfor %}
+		  </ul>						
+		</div>
+   </div>
+   <div class="container-fluid">    
+		<div class="panel panel-default">
+			<div class="panel-heading">			
+				<h3>{{ entry_question }}{{ questiononproduct }} ?</h3>
+				<span class="pull-right"><a data-toggle="tooltip" title="View Product" class="prolink" href="{{ productlink }}" target="_blank">{{ productname }}</a></span>
+			</div>
+			
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table table-bordered table-hover">
+					  <thead>
+						<tr>				
+						  <td class="text-left">{{ column_answered }}</td>
+						  <td class="text-left">{{ column_answerby }}</td>
+						  <td class="text-left">{{ column_email }}</td>
+						  <td class="text-left">{{ column_answered_date }}</td>
+							<td class="text-center">{{ column_action }}</td>
+						</tr>
+					  </thead>          
+						<tbody>
+						{% if answers %}
+						 {% for answer in answers %}
+				          <tr class="indexdiv{{ answer.user_question_answer_id }}">					 
+										<td class="text-left">{{ answer.answer }}</td>
+										<td class="text-left">{% if (answer['name'] is not empty) %}{{ answer['name'] }}
+										{% else %}{{ answer['usename'] }} {% endif %}</td>
+										<td class="text-left">
+											{% if (answer['email'] is not empty) %}{{ answer['email'] }}
+											{% else %}{{ answer['usenameemail'] }} {% endif %}
+										</td>
+										<td class="text-left">{{ answer.date_added }}</td>
+										<td class="text-center"><i class="fa fa-trash btn btn-danger deletebtn{{ answer.user_question_answer_id }}" data-toggle="tooltip" title="delete"></i></td>													
+									</tr>
+								<script>
+								$('.deletebtn{{ answer.user_question_answer_id }}').click(function(){
+											var user_question_answer_id ='{{ answer.user_question_answer_id }}';
+												$.ajax({
+													url:'index.php?route=vendor/questions/deleteanswers&user_question_answer_id='+user_question_answer_id,
+													type :'post',
+													dataType:'json',
+													beforeSend:function(){
+												    return confirm("Are you sure you want to Delete");
+											        },
+													success: function(json) {
+													 if (json['success']) {
+													   $('.indexdiv'+user_question_answer_id).remove(); 
+													}
+												}
+											});											  
+										});
+									</script>
+								{% endfor %}
+							{% endif %}
+						</tbody>
+					</table>
+				</div>		 
+				<div class="row">
+				  <div class="col-sm-6 text-left"></div>
+				  <div class="col-sm-6 text-right"></div>
+				</div>
+			</div>
+			<div class="panel-body">
+			<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-questions" class="form-horizontal">  
+				<div class="form-group">
+				  <label class="control-label col-sm-2">Answer</label>
+				  <div class="col-sm-10">
+				  <textarea name="answer" class="form-control" rows="7"></textarea>
+					 {% if error_answer %}
+						  <div class="text-danger">{{ error_answer }}</div>
+					  {% endif %}
+				  </div>
+				</div>
+				<button type="submit" form="form-formanswer" data-toggle="tooltip" title="" class="btn btn-primary pull-right">Submit</button>      
+			</form>
+			</div>
+		</div>
+	</div>
+</div>
+<style>.padd0 {padding-left:2px;padding-right:0px;}
+   .prolink{ font-size: 15px;
+    border: solid 2px #ddd;
+    padding: 5px;
+   text-decoration: underline;}
+   .prolink:hover{background:#B8B8B8; color:#fff;}
+</style>
+{{ footer }}

@@ -1,0 +1,11 @@
+.designer-attributes{border-bottom: 1px dashed #ddd;border-top: 1px dashed #ddd;clear: both;display: block;float: left;margin: 16px 0;padding: 10px 0;width: 100%;}
+.designer-attributes .list-colors{float: left;width: 100%;}
+.designer-attributes .list-colors > a{float: left;height: 24px;margin: 8px;outline: 1px solid #ccc;cursor: pointer;}
+.designer-attributes .list-colors > a.active{border-radius: 50%;-webkit-border-radius:50%;-moz-border-radius: 50%;;overflow: hidden;border: 1px solid #007aff;outline: none;}
+.designer-attributes .list-colors > a span{float: left;height: 24px;}
+.p-color-sizes.list-number{list-style: outside none none;float: left;margin: 0;padding: 0;}
+.p-color-sizes.list-number > li:first-child{margin-left:0;}
+.p-color-sizes.list-number > li{float:left;margin: 0 6px;text-align: center}
+.p-color-sizes.list-number > li label{clear: both;display: block;font-size: 12px;}
+.p-color-sizes.list-number > li > input{clear: both;display: block;float:left;padding: 4px;text-align: center;width:40px;}
+ul.list-unstyled{padding-left:0;}

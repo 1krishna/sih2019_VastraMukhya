@@ -1,0 +1,6 @@
+#oc_tool_cart { padding-left: 0; }
+#dg-products .thumbnail img { max-width: 100%; max-height: 100px; }
+div.required .control-label:before { content: '* '; color: #F00; font-weight: bold; }
+.dg-poduct-fields > label { width: 100%; margin-left: 0 !important; }
+.ps-scrollbar-y-rail { display: none!important; }
+.product-options { overflow-x: hidden!important; overflow-y: auto!important; }

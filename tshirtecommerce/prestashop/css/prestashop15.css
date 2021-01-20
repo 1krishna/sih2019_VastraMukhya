@@ -1,0 +1,85 @@
+/*
+* @module       Prestashop Custom Product Designer
+*
+* @author       tshirtecommerce - https://tshirtecommerce.com/
+* 
+* API           1.0.1
+* 
+* @copyright    Copyright (C) 2016 tshirtecommerce.com. All rights reserved.
+* @license      GNU General Public License version 2 or later; see LICENSE
+*
+* @since        only 1.5
+*
+*/
+
+#tab-tshirtecommerce .btn-group {position: relative; display: inline-block; vertical-align: middle;}
+#tab-tshirtecommerce .btn.btn-primary {background-color: #00aff0; color: #fff;border-color: #2eacce;}
+#tab-tshirtecommerce .btn-group>.btn, #tab-tshirtecommerce .btn-group-vertical>.btn {position: relative;float: left;}
+#tab-tshirtecommerce .btn {display: inline-block;margin-bottom: 0;font-weight: normal;text-align: center;vertical-align: middle;cursor: pointer;background-image: none;white-space: nowrap;border: 1px solid transparent;padding: 6px 8px;font-size: 12px;line-height: 1.42857;user-select: none;-ms-user-select: none;-moz-user-select: none;-webkit-user-select: none;}
+#tab-tshirtecommerce .btn .caret {border-top-color: #fff!important;margin-left: 0;display: inline-block;width: 0;height: 0;vertical-align: middle;border-top: 4px solid;border-right: 4px solid transparent;    border-left: 4px solid transparent;}
+#tab-tshirtecommerce .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+#tab-tshirtecommerce .dropdown-menu {text-align: left;}
+#tab-tshirtecommerce .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    list-style: none;
+    font-size: 12px;
+    text-align: left;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,0.15);
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+    background-clip: padding-box;
+}
+#tab-tshirtecommerce .dropdown-menu>li a {
+    padding: 5px 10px;
+    display: block;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.42857;
+    color: #333;
+    white-space: nowrap;
+}
+#tab-tshirtecommerce .dropdown-menu .divider {
+    height: 1px;
+    margin: 7.5px 0;
+    overflow: hidden;
+    background-color: #e5e5e5;
+}
+#tab-tshirtecommerce .btn-danger {
+    color: #fff;
+    background-color: #E08F95;
+    border-color: #da7b82;
+}
+
+
+#designer-products {
+    width: 100%;
+    z-index: 100520!important;
+    background-color: transparent;
+    margin: 0 auto;
+    left: 0;
+}
+#designer-products .modal-body {
+    overflow: hidden;
+}
+#designer-products .list-products, #designer-products .modal-body {
+    max-height: 900px!important;
+}

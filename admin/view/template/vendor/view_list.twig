@@ -1,0 +1,183 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+	<div class="pull-right">
+		<a href="{{ invoice }}" target="_blank" data-toggle="tooltip" title="{{ button_invoice_print }}" class="btn btn-info"><i class="fa fa-print"></i></a>
+	</div>
+      <h1>{{ heading_view }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-list"></i> {{ text_view }}(#{{ order_id }})</h3>
+      </div>
+      <div class="panel-body">
+		  
+		<form action="" method="post" enctype="multipart/form-data" id="form-information">
+			<div class="table-responsive">
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							<td class="text-left" colspan="2">{{ text_details }}</td>
+                         </tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="text-left"><b>{{ text_order }}</b>: #{{ order_id }}</td>
+							<td class="text-left"><b>{{ text_Payment }}</b>: {{ payment_method }}</td>
+                        </tr>
+						<tr>
+							<td class="text-left"><b>{{ text_date }}</b>: {{ date_added }}</td>
+							<td class="text-left"><b>{{ text_shipping }}</b>: {{ shipping_method }}</td>
+                        </tr>
+					</tbody>
+				</table>
+				
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<td style="width: 50%;" class="text-left">{{ text_payment_address }}</td>
+							{% if shipping_method %}
+							<td style="width: 50%;" class="text-left">{{ text_shipping_address }}
+							{% endif %}</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="text-left">{{ payment_address }}</td>
+							{% if shipping_method %}
+							<td class="text-left">{{ shipping_address }}</td>
+							{% endif %}
+						</tr>
+					</tbody>
+				</table>
+				
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							<td class="text-left">{{ column_product }}</td>
+							<td class="text-left">{{ column_model }}</td>
+							<td class="text-center">{{ column_quantity }}</td>
+							<td class="text-center">{{ column_orderstatus }}</td>
+							<td class="text-right">{{ column_tracking }}</td>
+							<td class="text-right">{{ column_price }}</td>
+							<td class="text-right">{{ column_total }}</td>
+						</tr>
+					</thead>
+					<tbody>
+						{% for product in products %}
+						<tr>
+                           <td class="text-left"><a href="{{ product.href }}">{{ product.name }}</a> {{ text_byseller }} <a href="{{ product.sellerhref }}">{{ product.sellername }}</a></td>
+							<td class="text-left">{{ product.model }}</td>
+							<td class="text-right">{{ product.quantity }}</td>
+                            
+                            <td class="text-center"><div id="addst"><i style="display:block" id="btnNew">{% if not product.statusname %} " <span class="osts">{{ product.statusname }}</span> " {% else %}<span class="osts">{{ product.statusname }}</span>{% endif %}</i>
+							<div class="input-group addstatus" style="display:none">
+								<select type="text" name="order_status_id" class="form-control" id="selectstatu">
+									<option value="">{{ text_select }}</option>
+				{% for order_status in order_statuss %}
+				{% if order_status.order_status_id == order_status_id %}
+									<option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
+									{% else %}
+									<option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
+									{% endif %}
+									{% endfor %}
+								</select>	
+								<span class="input-group-btn">
+									<button class="btn btn-primary statuss" rel="{{ product.order_id }}" type="button">Select</button>
+								</span></div></div></td>
+                            
+							<td class="text-center"><div id="add"><i style="display:block" id="btnNewGroup"><span class="track">{{ product.tracking }}</span></i>
+							<div class="input-group addtracking" style="display:none">
+								<input type="text" name="tracking" class="form-control" id="tracktext"/>
+									<input type="hidden" name="order_id" value="{{ product.order_id }}"/>
+									<span class="input-group-btn">
+										<button class="btn btn-primary tracks" id="tagadd" type="button">Save</button>
+									</span>
+							</div>
+							</div>
+							
+							</td>
+							<td class="text-center">{{ product.price }}</td>
+							<td class="text-center">{{ product.total }}</td>
+                        </tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>	
+		</form>
+	  </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var flip = 0;
+	$( "#btnNew" ).click(function() {
+	$( ".addstatus" ).show( flip++ % 2 === 0 );
+	$( "#btnNew" ).hide()
+	
+});
+</script>
+<script>
+$('.statuss').click(function(){
+	var order_id = $(this).attr('rel');
+	$.ajax({
+	url: 'index.php?route=vendor/report/addorderstatus&user_token={{ user_token }}&order_id='+order_id,
+	type:'post',
+	dataType:'json',
+	data: $('#addst select'),
+		beforeSend: function() {
+	},
+	success: function(json) {
+		if (json['success']) {
+			$(".osts").html(json['order_status_id'])
+			$( ".addstatus" ).hide()
+				$( "#btnNew" ).show()
+				$( "#selectstatu" ).val('')
+		 }
+		setTimeout(function(e){ $('.close').trigger('click');location.reload();},1000);	
+	}
+});
+});
+
+
+</script>
+
+
+<script>
+var flip = 0;
+	$( "#btnNewGroup" ).click(function() {
+	$( ".addtracking" ).show( flip++ % 2 === 0 );
+	$( "#btnNewGroup" ).hide()
+});
+</script>
+<script>
+$('.tracks').click(function(){
+	$.ajax({
+	url: 'index.php?route=vendor/report/addtrack&user_token={{ user_token }}',
+	type:'post',
+	dataType:'json',
+	data: $('#add input,#add hidden'),
+		beforeSend: function() {
+	},
+	success: function(json) {
+		if (json['success']) {
+			$(".track").html(json['tracking'])
+			$( ".addtracking" ).hide()
+				$( "#btnNewGroup" ).show()
+				$( "#tracktext" ).val('')
+		 }
+		setTimeout(function(e){ $('.close').trigger('click');location.reload();},4000);	
+	}
+});
+});
+</script>
+{{ footer }}

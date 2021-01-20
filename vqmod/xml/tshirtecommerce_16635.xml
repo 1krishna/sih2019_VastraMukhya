@@ -1,0 +1,82 @@
+<modification>
+	<id>tshirtecommerce</id>
+	<version>4.2.1</version>
+	<vqmver>2.4.0</vqmver>
+	<author>Tshirtecommerce Team</author>
+
+	<!-- @deprecated -->
+
+	<!-- @added tshirtecommerce_design.xml -->
+	<file error="skip" name="catalog/controller/account/account.php,system/storage/modification/catalog/controller/account/account.php">
+		<operation error="skip">
+			<search position="before" index="1"><![CDATA[
+				breadcrumbs
+			]]></search>
+			<add><![CDATA[
+				if ($this->request->server['HTTPS']) {
+					$site_url = HTTPS_SERVER;
+				} else {
+					$site_url = HTTP_SERVER;
+				}
+
+				$this->load->language('extension/module/tshirtecommerce');
+				$data['tshirtecommerce_account_mydesign'] = $this->language->get('tshirtecommerce_account_mydesign');
+				$data['tshirtecommerce_design_load_more'] = $this->language->get('tshirtecommerce_design_load_more');
+				$tshirtecommerce_parent = $this->config->get('tshirtecommerce_product');
+
+				$this->load->model('tshirtecommerce/mydesign');
+				$tshirtecommerce_product = $this->model_tshirtecommerce_mydesign->getDefaultProduct($tshirtecommerce_parent);
+				$data['design_your_own'] = $this->url->link('tshirtecommerce/designer', 'product_id='.$tshirtecommerce_product.'&parent_id='.$tshirtecommerce_parent, true);
+
+				$mydesign = $this->model_tshirtecommerce_mydesign->getDesigns();
+				$data['mydesigns'] = $mydesign['html'];
+				$data['mydesign_continue'] = $mydesign['continue'];
+
+				$data['mydesign_ajax_link'] = $this->url->link('tshirtecommerce/mydesign/more', '', true);
+				$data['mydesign_ajax_del_link'] = $this->url->link('tshirtecommerce/mydesign/delete', '', true);
+
+				$data['tshirtecommerce_design_confirm_delete'] = $this->language->get('tshirtecommerce_design_confirm_delete');
+				$data['tshirtecommerce_mydesign_create'] = $this->language->get('tshirtecommerce_mydesign_create');
+
+				$this->document->addStyle('catalog/view/javascript/tshirtecommerce.mydesign.css');
+				$this->document->addScript('catalog/view/javascript/tshirtecommerce.mydesign.js');
+			]]></add>
+		</operation>
+	</file>
+
+	<file error="skip" name="catalog/view/theme/*/template/account/account.twig,system/storage/modification/catalog/view/theme/*/template/account/account.twig">
+		<operation error="skip">
+			<search position="before" index="1"><![CDATA[
+				id="content"
+			]]></search>
+			<add><![CDATA[
+				<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+				<script>
+					var mydesign_page = 2;
+					var mydesign_ajax_link = '{{ mydesign_ajax_link }}';
+					var mydesign_ajax_del_link = '{{ mydesign_ajax_del_link }}';
+					var tshirtecommerce_design_confirm_delete = '{{ tshirtecommerce_design_confirm_delete }}';
+				</script>
+				<div class="tshirtecommerce-mydesign-content">
+					<button class="tshirtecommerce-mydesign-accordion" onclick="fntshirtecommercemydesign()">
+						{{ tshirtecommerce_account_mydesign }} 
+						<i id="material_add" style="float:right;" class="material-icons">add</i>
+						<i id="material_remove" style="float:right;display:none;" class="material-icons">remove</i>
+					</button>
+					<div id="tshirtecommerce-mydesign" class="tshirtecommerce-mydesign" style="display:none;">
+						<div class="tshirtecommerce-loading"></div>
+	  					<p><a href="{{ design_your_own }}" target="_blank" class="mbtn mbtn-primary">{{ tshirtecommerce_mydesign_create }}</a></p>
+
+	  					<div id="tshirtecommercemydesign">
+	  						{{ mydesigns|raw }}
+	  					</div>
+	  					{% if mydesign_continue is defined and mydesign_continue == 1 %}
+	  					<p id="mydesign_continue"><a class="btn tshirtecommerce-design-loadmore" href="javascript:void(0)" onclick="fnmydesignmore(this)">{{ tshirtecommerce_design_load_more }}</a></p>
+	  					{% endif %}
+					</div>
+				</div>
+			]]></add>
+		</operation>
+	</file>
+
+</modification>

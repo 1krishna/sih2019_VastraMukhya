@@ -1,0 +1,64 @@
+<modification>
+	<id>tshirtecommerce</id>
+	<version>4.2.1</version>
+	<vqmver>2.4.0</vqmver>
+	<author>Tshirtecommerce Team</author>
+
+	<!-- @added tshirtecommerce_design.xml -->
+	<file error="skip" name="catalog/controller/account/account.php,system/storage/modification/catalog/controller/account/account.php">
+		<operation error="skip">
+			<search position="before" index="1"><![CDATA[
+				breadcrumbs
+			]]></search>
+			<add><![CDATA[
+				if ($this->request->server['HTTPS']) {
+					$site_url = HTTPS_SERVER;
+				} else {
+					$site_url = HTTP_SERVER;
+				}
+
+				$this->load->language('extension/module/tshirtecommerce');
+				$data['tshirtecommerce_account_mydesign'] = $this->language->get('tshirtecommerce_account_mydesign');
+				$tshirtecommerce_parent = $this->config->get('tshirtecommerce_product');
+
+				$data['mydesign_link'] = $this->url->link('tshirtecommerce/mydesign', '', true);
+
+			]]></add>
+		</operation>
+	</file>
+
+	<file error="skip" name="catalog/view/theme/*/template/account/account.twig,system/storage/modification/catalog/view/theme/*/template/account/account.twig">
+		<operation error="skip">
+			<search position="before" index="1"><![CDATA[
+				text_edit
+			]]></search>
+			<add><![CDATA[
+				<li><a href="{{ mydesign_link }}">{{ tshirtecommerce_account_mydesign }} </a><li>
+			]]></add>
+		</operation>
+	</file>
+
+	<file error="skip" name="catalog/controller/common/header.php,system/storage/modification/catalog/controller/common/header.php">
+		<operation error="skip">
+			<search position="before" index="1"><![CDATA[
+				common/header
+			]]></search>
+			<add><![CDATA[
+				$this->load->language('tshirtecommerce/mydesign');
+				$data['text_mydesign'] = $this->language->get('design_title');
+				$data['link_mydesign'] = $this->url->link('tshirtecommerce/mydesign', '', true);
+			]]></add>
+		</operation>
+	</file>
+	<file error="skip" name="catalog/view/theme/*/template/common/header.twig,system/storage/modification/catalog/view/theme/*/template/common/header.twig">
+		<operation error="skip">
+			<search position="before"><![CDATA[
+				text_transaction
+			]]></search>
+			<add><![CDATA[
+				<li><a href="{{ link_mydesign }}">{{ text_mydesign }}</a></li>
+			]]></add>
+		</operation>
+	</file>
+
+</modification>

@@ -1,0 +1,15 @@
+.goog-logo-link {
+   display:none !important;
+}
+.goog-te-gadget{
+   color: transparent !important;
+}
+.goog-te-gadget .goog-te-combo{
+   color: #888 !important;
+}
+.goog-te-banner-frame{
+visibility:hidden !important;
+}
+body{
+top: 0px !important;
+}

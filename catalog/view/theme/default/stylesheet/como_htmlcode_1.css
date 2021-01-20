@@ -1,0 +1,39 @@
+﻿.homecontainer1 {
+    background-color: #fafafa;
+    background-size: 100% 100%;
+    overflow: hidden;
+    padding: 0px;
+}
+.homebox1 {
+    border: 2px solid #ddd;
+    float: left;
+    background-size: 100% 100%;
+    overflow: hidden;
+}
+.homebox1 img {
+	-webkit-transition: all 1s ease;
+	-moz-transition: all 1s ease;
+	-o-transition: all 1s ease;
+	-ms-transition: all 1s ease;
+	transition: all 1s ease;
+}
+.grow img:hover {
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -o-transform: scale(1.1);
+    transform: scale(1.1);
+    transition: all 1s;
+    -webkit-transition: all 1s;
+}
+.box .box-heading img {
+    float: left;
+    margin-right: 5px;
+}
+.box .box-heading {
+    padding-left: 3px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: #eee;
+	font-size: 14px;
+	font-weight:bold;
+}

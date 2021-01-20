@@ -1,0 +1,35 @@
+<div class="homecontainer" style="{% if img_block_background %}background-image: url('{{ img_block_background }}');{% endif %}">
+    <div id="comoimgblockslideshow{{ module }}" class="swiper-container">
+        <div class="swiper-wrapper">
+            {% for i in 1..img_number %}
+            <div class="swiper-slide text-center">
+                {% if img_block_links[i] %}
+                <a href="{{ img_block_links[i] }}"><img src="{{ img_block_images[i] }}" alt="{{ img_block_titles[i] }}" class="img-responsive" /></a>
+                {% else %}
+                <img src="{{ img_block_images[i] }}" alt="{{ img_block_titles[i] }}" class="img-responsive" />
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        <div class="swiper-pagination slideshow{{ module }}"></div>
+        <div class="swiper-pager">
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript"><!--
+$('#comoimgblockslideshow{{ module }}').swiper({
+    mode: 'horizontal',
+	slidesPerView: 1,
+	pagination: '.slideshow{{ module }}',
+	paginationClickable: true,
+	nextButton: '.swiper-button-next',
+    prevButton: '.swiper-button-prev',
+    spaceBetween: 30,
+	autoplay: 2000,
+    autoplayDisableOnInteraction: true,
+    speed: 500,
+    loop: true
+});
+--></script>

@@ -1,0 +1,305 @@
+<modification>
+	<id>tshirtecommerce</id>
+	<version>4.2.1</version>
+	<vqmver>2.4.0</vqmver>
+	<author>Tshirtecommerce Team</author>
+
+	<file error="skip" name="admin/controller/catalog/product.php,system/storage/modification/admin/controller/catalog/product.php">
+		<operation error="skip">
+			<search position="before"><![CDATA[catalog/product_form]]></search>
+			<add><![CDATA[
+				$this->load->model('user/user');
+				$user_info = $this->model_user_user->getUser($this->user->getId());
+				$logged = array(
+					'login' => true,
+					'email' => $user_info['email'],
+					'id' => $user_info['user_id']
+				);
+				$this->session->data['is_admin'] = $logged;
+				setcookie('designer_session_id', $this->session->getId(), time() + (86400 * 30), "/");
+
+				$this->load->language('extension/module/tshirtecommerce');
+				$this->load->model('tshirtecommerce/product');
+				if (isset($this->request->get['product_id'])) {
+					$tshirtecommerce_data = $this->model_tshirtecommerce_product->get_product($this->request->get['product_id']);
+					if ($tshirtecommerce_data !== false && count($tshirtecommerce_data) > 0) {
+						$data['print_type'] = $tshirtecommerce_data['print_type'];
+						$data['print_types'] = $tshirtecommerce_data['print_types'];
+						$data['show_attribute'] = $tshirtecommerce_data['show_attribute'];
+						$data['design'] = $tshirtecommerce_data['design'];
+					}
+				}
+				$data['ts_language_default'] = $data['languages'][$this->config->get('config_language')]['language_id'];
+				$data['session_id'] = session_id();
+
+				if (!isset($product_info['author']) || $product_info['author'] <= 0) {
+					if (isset($this->request->post['design_product_id'])) {
+						$data['design_product_id'] = $this->request->post['design_product_id'];
+					} elseif (isset($product_info['design_product_id'])) {
+						$data['design_product_id'] = $product_info['design_product_id'];
+					} else {
+						$data['design_product_id'] = '';
+					}
+
+					if (isset($this->request->post['design_product_title_img'])) {
+						$data['design_product_title_img'] = $this->request->post['design_product_title_img'];
+					} elseif (isset($product_info['design_product_title_img'])) {
+						$data['design_product_title_img'] = $product_info['design_product_title_img'];
+					} else {
+						$data['design_product_title_img'] = '';
+					}
+				} else {
+					$data['design_product_id'] 			= '';
+					$data['design_product_title_img'] 	= '';
+					$data['tshirtecommerce_campaign'] 	= 1;
+
+					// Get data for campaigns
+					if ($this->request->server['HTTPS']) {
+						$site_url = HTTPS_SERVER;
+					} else {
+						$site_url = HTTP_SERVER;
+					}
+					
+					$this->load->model('tool/image');
+					if (!empty($product_info['image']))
+						$data['tshirtecommerce_campaign_img'] = $this->model_tool_image->resize($product_info['image'], 300, 300);
+					else 
+						$data['tshirtecommerce_campaign_img'] = $this->model_tool_image->resize('no_image.png', 300, 300);
+
+					$this->load->model('customer/customer');
+					$customer_info = $this->model_customer_customer->getCustomer($product_info['author']);
+					
+					$data['author_name'] 		= sprintf('%s %s', $customer_info['firstname'], $customer_info['lastname']);
+					$data['author_email'] 		= $customer_info['email'];
+					$data['author_telephone'] 	= $customer_info['telephone'];
+					$data['author_fax'] 		= $customer_info['fax'];
+					$data['author_ip'] 			= $customer_info['ip'];
+
+					$data['campaign_link'] 				= '';
+					$data['campaign_base_price'] 		= '';
+					$data['campaign_selling_price'] 	= '';
+					$data['campaign_quantity'] 			= '';
+					$data['campaign_estimated_profit'] 	= '';
+				}
+
+				if ($this->request->server['HTTPS']) {
+					$data['http_server_value'] = HTTPS_SERVER;
+					$data['dir_admin_url_rpl'] = HTTPS_CATALOG;
+				} else {
+					$data['http_server_value'] = HTTP_SERVER;
+					$data['dir_admin_url_rpl'] = HTTP_CATALOG;
+				}
+
+				$data['session_id'] = $this->session->getId();
+
+				$tshirt_product_url_rpl = $data['dir_admin_url_rpl'].'/tshirtecommerce/admin/index.php?/product/viewmodal/';
+				$data['tshirt_product_url'] = $tshirt_product_url_rpl.$data['design_product_id']; 
+
+				if ($data['design_product_title_img'] != '') { 
+					$design_str = explode('::', $data['design_product_title_img']); 
+					if (empty($design_str[1])) $design_str[1] = '';
+				}
+				if (isset($design_str) && isset($design_str[2])) {
+					$data['design_print_price'] = $design_str[2];
+				} else {
+					$data['design_print_price'] = 0;
+				}
+
+				// @since 4.2.0: get campaign product info
+				$is_campaign_system = $this->config->get('tshirtecommerce_designer_user_shop');
+				if ($is_campaign_system !== null && $is_campaign_system == 1) {
+					$data['lang']['tshirtecommerce_addon_campaign_label_alert_info'] = $this->language->get('tshirtecommerce_addon_campaign_label_alert_info');
+					$data['lang']['tshirtecommerce_addon_campaign_label_designer_info'] = $this->language->get('tshirtecommerce_addon_campaign_label_designer_info');
+					$data['lang']['tshirtecommerce_addon_campaign_label_email_info'] = $this->language->get('addon_designer_store_email');
+					$data['lang']['tshirtecommerce_addon_campaign_label_status_info'] = $this->language->get('addon_designer_store_action_status');
+					$data['lang']['tshirtecommerce_addon_campaign_label_mobile_info'] = $this->language->get('tshirtecommerce_addon_campaign_label_mobile_info');
+					$data['lang']['tshirtecommerce_addon_campaign_label_sold_info'] = $this->language->get('tshirtecommerce_addon_campaign_label_sold_info');
+					$data['lang']['tshirtecommerce_addon_campaign_label_date_start_info'] = $this->language->get('tshirtecommerce_addon_campaign_label_date_start_info');
+					$data['lang']['tshirtecommerce_addon_campaign_label_date_end_info'] = $this->language->get('tshirtecommerce_addon_campaign_label_date_end_info');
+
+					if (isset($this->request->get['product_id'])) {
+						$campaign_info = $this->model_tshirtecommerce_product->get_campaign_info($this->request->get['product_id']);
+						if ($campaign_info !== false && count($campaign_info) > 0) {
+							$data['campaign']['status'] 	= $campaign_info['status'];
+							$data['campaign']['sold'] 		= ($campaign_info['sold'] != '' && $campaign_info['sold'] != null) ? $campaign_info['sold'] : 0;
+							$data['campaign']['date_start'] = date($this->language->get('date_format_short'), strtotime($campaign_info['date_added']));
+							$data['campaign']['date_end'] 	= date($this->language->get('date_format_short'), strtotime($campaign_info['date_end']));
+						} else {
+							$data['campaign']['status'] 	= '';
+							$data['campaign']['sold'] 		= '';
+							$data['campaign']['date_start'] = '';
+							$data['campaign']['date_end'] 	= '';
+						}
+					} else {
+						$campaign_info = false;
+					}
+				}
+				$this->load->language('catalog/product');
+			]]></add>
+		</operation>
+	</file>
+
+	<file error="skip" name="admin/model/catalog/product.php,system/storage/modification/admin/model/catalog/product.php">
+		<operation error="skip">
+			<search position="after"><![CDATA[$product_id = $this->db->getLastId();]]></search>
+			<add><![CDATA[
+				if (isset($data['design_product_id'])) {
+					$this->db->query("
+						UPDATE `".DB_PREFIX."product` 
+						SET `design_product_id` = '".$this->db->escape($data['design_product_id'])."' 
+						WHERE `product_id` = '".(int)$product_id."'
+					");
+				}
+				if (isset($data['design_product_title_img'])) {
+					$this->db->query("
+						UPDATE `".DB_PREFIX."product` 
+						SET `design_product_title_img` = '".$this->db->escape($data['design_product_title_img'])."' 
+						WHERE `product_id` = '".(int)$product_id."'
+					");
+				}
+			]]></add>
+		</operation>
+		<operation error="skip">
+			<search position="after"><![CDATA[public function editProduct]]></search>
+			<add><![CDATA[
+				if (isset($data['design_product_id'])) {
+					$this->db->query("
+						UPDATE `".DB_PREFIX."product` 
+						SET `design_product_id` = '".$this->db->escape($data['design_product_id'])."' 
+						WHERE `product_id` = '".(int)$product_id."'
+					");
+				}
+				if (isset($data['design_product_title_img'])) {
+					$this->db->query("
+						UPDATE `".DB_PREFIX."product` 
+						SET `design_product_title_img` = '".$this->db->escape($data['design_product_title_img'])."' 
+						WHERE `product_id` = '".(int)$product_id."'
+					");
+				}
+			]]></add>
+		</operation>			
+	</file>
+
+	<file error="skip" name="admin/view/template/catalog/product_form.twig,system/storage/modification/admin/view/template/catalog/product_form.twig">
+		<operation error="skip">
+			<search position="before" index="1"><![CDATA[type="submit"]]></search>
+			<add><![CDATA[
+				<a href="javascript:void(0)" id="product-submit-link" data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-primary" onclick="product_submit_link_click()"><i class="fa fa-save"></i></a>
+				<button style="display:none;" type="submit" form="form-product" id='product-submit-button' data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-primary"><i class="fa fa-save"></i></button>
+			]]></add>
+		</operation>
+		<operation error="skip">
+			<search position="after"><![CDATA[#tab-design]]></search>
+			<add><![CDATA[
+				<li><a id="link-tab-tshirtecommerce" href="#tab-tshirtecommerce" data-toggle="tab">T-Shirt eCommerce</a></li>
+			]]></add>
+		</operation>
+		<operation error="skip">
+			<search position="before"><![CDATA[id="tab-design"]]></search>
+			<add><![CDATA[
+				<script type="text/javascript">
+					var ajaxurl = 'index.php?route=catalog/tshirtecommerce/ajax&user_token={{ token }}';
+					var tshirtURL = '{{ dir_admin_url_rpl }}/tshirtecommerce/';
+					var siteUrl = '{{ dir_admin_url_rpl }}/';
+					var lang_id = "{{ language['language_id'] }}";
+					var ts_lang_id = "{{ ts_language_default }}";
+					var session_id = "{{ session_id }}";
+					var opencart_designer_tool = 1;
+
+					$(document).ready(function() {
+						$('#product-submit-link').css('display', 'inline-block');
+						$('button[type="submit"]').css('display', 'none');
+						if ($('#save_stay').length) $('#save_stay').css('display', 'inline-block');
+					});
+				</script>
+				<script src="{{ dir_admin_url_rpl }}/tshirtecommerce/opencart/js/app.js" type="text/javascript"></script>  
+				<link href="{{ dir_admin_url_rpl }}/tshirtecommerce/opencart/css/admin.opencart.css" type="text/css" rel="stylesheet" />
+				<script src="{{ dir_admin_url_rpl }}/tshirtecommerce/opencart/js/tshirtecommerce.js" type="text/javascript"></script>
+				<div class="tab-pane" id="tab-tshirtecommerce">
+					{% if tshirtecommerce_campaign is not defined or tshirtecommerce_campaign != 1 %}
+						{% if design_product_title_img != '' %}
+							<div class="alert alert-info">
+								<i class="fa fa-exclamation-circle"></i>
+								If you want to hide option design of product. Please click <strong>Clear</strong> button to remove all data design. 
+								<button type="button" class="close" data-dismiss="alert">×</button>
+							</div>
+						{% endif %}
+						<input type="hidden" value="{{ design_product_id }}" id="_product_id" name="design_product_id">
+						<input type="hidden" value="{{ design_product_title_img }}" id="_product_title_img" name="design_product_title_img">
+						<div class="col-sm-12 form-group">
+							<div class="btn-group" style="padding-bottom:5px;">
+								<button type="button" class="btn btn-primary">Change Product Design</button>
+								<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<span class="caret"></span>
+									<span class="sr-only">Toggle Dropdown</span>
+								</button>
+								<ul class="dropdown-menu">
+									<li><a href="javascript:void(0)" key="123" onclick="app.admin.product(this, 0)"><strong>View List</strong> Product Design</a></li>
+									<li class="divider" role="separator"></li>
+									<li><a href="javascript:void(0)" key="123" onclick="app.admin.product(this, 4)"><strong>Create New</strong> Product Design</a></li>
+								</ul>
+							</div>
+							<div class="btn-group" style="padding-bottom:5px;">
+								<button type="button" class="btn btn-primary">Design Templates</button>
+								<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<span class="caret"></span>
+									<span class="sr-only">Toggle Dropdown</span>
+								</button>
+								<ul class="dropdown-menu">
+									<li><a href="javascript:void(0)" key="123" onclick="app.admin.product(this, 1)"><strong>Admin</strong> Design saved</a></li>
+									<li><a href="javascript:void(0)" key="123" onclick="app.admin.product(this, 2)"><strong>Clients</strong> Design saved</a></li>
+									<li class="divider" role="separator"></li>
+									<li><a href="javascript:void(0)" key="123" onclick="app.admin.product(this, 3)">Create New Design</a></li>
+								</ul>
+							</div>
+							<div class="btn-group" style="padding-bottom:5px;">
+								<a href="javascript:void(0)" class="btn btn-danger" key="123" onclick="app.admin.clear()">Clear</a>
+							</div>
+						</div>
+						<div id="tshirtecommerce-div-design-temp" style="display:none;">
+							<div class="form-group">
+								<label class="col-sm-2 control-label">Price of Printing</label>
+								<div class="col-sm-3">
+									<input type="text" onchange="setupPrice(this)" value="{{ design_print_price }}" id="design_print_price" name="design_print_price" class="form-control">
+								</div>
+							</div>
+						</div>
+						<div style="clear:both;"></div>
+						<div id="add_designer_product">
+							{% if design_product_id is defined and design_product_id != '' %}
+								<iframe id="tshirtecommerce-designer" frameborder="0" noresize="noresize" width="100%" height="800px" src="{{ tshirt_product_url }}"></iframe>
+								<script type="text/javascript">jQuery("#link-tab-tshirtecommerce").trigger("click");</script>
+							{% else %}
+								<div class="alert alert-primary" role="alert" style="background-color:#f7f7f9;line-height:7;border:1px solid #e1e1e8">
+									<center>
+										<strong>You do not select design.</strong><br />
+										If you want to set option design of product. Please click <span class="btn btn-primary btn-xs">Change Product Design</span> or <span class="btn btn-primary btn-xs">Design Templates</span> to set design template for this product.
+									</center>
+								</div>
+							{% endif %}
+						</div>
+					{% else %}
+						<div class="alert alert-warning" role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							{{ lang.tshirtecommerce_addon_campaign_label_alert_info }}
+						</div>
+						<div class="campaign-content col-xs-12">
+							<img class="img-responsive" src="{{ tshirtecommerce_campaign_img }}" />
+							</br/>
+							<p>{{ lang.tshirtecommerce_addon_campaign_label_designer_info }}: <a href="javascript:void(0)">{{ author_name }}</a></p>
+							<p>{{ lang.tshirtecommerce_addon_campaign_label_email_info }}: <a href="#">{{ author_email }}</a></p>
+							<p>{{ lang.tshirtecommerce_addon_campaign_label_mobile_info }}: {{ author_telephone }} / Fax: {{ author_fax }}</p>
+							<br/>
+							<p>{{ lang.tshirtecommerce_addon_campaign_label_status_info }}: {{ campaign.status }}</p>
+							<p>{{ lang.tshirtecommerce_addon_campaign_label_sold_info }}: {{ campaign.sold }}</p>
+							<p>{{ lang.tshirtecommerce_addon_campaign_label_date_start_info }}: {{ campaign.date_start }}</p>
+							<p>{{ lang.tshirtecommerce_addon_campaign_label_date_end_info }}: {{ campaign.date_end }}</p>
+						</div>
+					{% endif %}
+					<div style="clear:both;"></div>
+					<!-- END:: add tab design product -->
+				</div>
+			]]></add>
+		</operation>
+	</file>
+</modification>

@@ -1,0 +1,350 @@
+<modification>
+	<id>tshirtecommerce</id>
+	<version>4.2.1</version>
+	<vqmver>2.4.0</vqmver>
+	<author>Tshirtecommerce Team</author>
+
+	<!-- get tshirtecommerce informations for product detail page -->
+	<file error="skip" name="catalog/controller/product/product.php,system/storage/modification/catalog/controller/product/product.php">
+		<operation error="skip">
+			<search position="before"><![CDATA[
+				$this->load->view('product/product
+			]]></search>
+			<add><![CDATA[
+				/* vqmod/xml/tshirtecommerce_product.xml */
+				$this->load->language('extension/module/tshirtecommerce');
+				$this->load->model('tshirtecommerce/sproduct');
+				$design_info = $this->model_tshirtecommerce_sproduct->getInfo($this->request->get['product_id']);;
+				if ($design_info != false) {
+					$data['tshirtecommerce'] = $design_info;
+				}
+			]]></add>
+		</operation>
+	</file>
+	<!-- for get informations and display on product detail page -->
+	<file error="skip" name="catalog/view/theme/*/template/product/product.twig,system/storage/modification/catalog/view/theme/*/template/product/product.twig">
+		<operation error="skip">
+			<search position="before"><![CDATA[
+				id="button-cart"
+			]]></search>
+			<add><![CDATA[
+				{# vqmod/xml/tshirtecommerce_product.xml #}
+				{% if tshirtecommerce is defined %}
+					{% if tshirtecommerce.show_attribute is defined and tshirtecommerce.show_attribute == 1 and tshirtecommerce.attributes is defined %}
+						{{ tshirtecommerce.attributes }}
+					{% endif %}
+					{% if tshirtecommerce.is_campaign is not defined or tshirtecommerce.is_campaign != 1 %}
+						{% if tshirtecommerce.price_of_print is defined and tshirtecommerce.price_of_print is not empty %}
+							<label style="width:!00%;">{{ tshirtecommerce.price_of_print }}</label><br/>
+						{% endif %}
+						{% if tshirtecommerce.design_custom_button is defined and tshirtecommerce.design_custom_button is not empty %}
+							{{ tshirtecommerce.design_custom_button }}
+						{% endif %}
+						{% if tshirtecommerce.hide_add2cart is defined and tshirtecommerce.hide_add2cart == 1 %}
+							<style>#button-cart,.product-options .qty, .quantity .counter, #input-quantity { display:none!important; }</style>
+						{% endif %}
+					{% endif %}
+				{% endif %}
+			]]></add>
+		</operation>
+	</file>
+
+	<!-- add to cart on product detail page with tshirtecommerce attributes -->
+	<file error="skip" name="catalog/controller/checkout/cart.php,system/storage/modification/catalog/controller/checkout/cart.php">
+		<!-- add to cart -->
+		<operation error="skip">
+			<search position="after"><![CDATA[
+				$product_options = $this->model_catalog_product->getProductOptions
+			]]></search>
+			<add><![CDATA[
+				/* vqmod/xml/tshirtecommerce_product.xml */
+				$this->load->model('tshirtecommerce/sproduct');
+				if (isset($this->request->post['tshirtecommerce'])) {
+					$tshirtecommerces = $this->request->post['tshirtecommerce'];
+
+					if (isset($tshirtecommerces['colors'])) {
+						$check_tshirtecommerce_colors = explode(';', $tshirtecommerces['colors']);
+						if (count($check_tshirtecommerce_colors) > 0) {
+							$tmp_colors = array();
+							foreach ($check_tshirtecommerce_colors as $tcolor_hex) {
+								if (!empty($tcolor_hex))
+									$tmp_colors[] = $tcolor_hex;
+							}
+							$tshirtecommerces['colors'] = $tmp_colors;
+						}
+					} else {
+						$tshirtecommerces['colors'] = false;
+					}
+
+					$tshirtecommerce = $this->model_tshirtecommerce_sproduct->getQtyAndPrice($tshirtecommerces, $this->request->post['product_id'], $quantity, true);
+					$quantity = ($tshirtecommerce['quantity'] > 1) ? $tshirtecommerce['quantity'] : 1;
+					if ($tshirtecommerce['type'] != 'cart') {
+						$option['tshirtecommerce']['price_of_print'] = $tshirtecommerce['price_of_print'];
+					}
+					$option['tshirtecommerce']['options'] = $tshirtecommerces;
+				} elseif (isset($this->request->post['design'])) {
+					$tshirtecommerces = $this->request->post['design'];
+					if (isset($tshirtecommerces) && count($tshirtecommerces) > 0 && isset($tshirtecommerces['refer']) && $tshirtecommerces['refer'] == 'designer') {
+						if (isset($tshirtecommerces['color_hex'])) {
+							$check_tshirtecommerce_colors = explode(';', $tshirtecommerces['color_hex']);
+							if (count($check_tshirtecommerce_colors) > 0) {
+								$tmp_colors = array();
+								foreach ($check_tshirtecommerce_colors as $tcolor_hex) {
+									if (!empty($tcolor_hex))
+										$tmp_colors[] = $tcolor_hex;
+								}
+								$tshirtecommerces['colors'] = $tmp_colors;
+							}
+						} else {
+							$tshirtecommerces['colors'] = false;
+						}
+						$tshirtecommerces['type'] = 'cart';
+						$tshirtecommerce = $this->model_tshirtecommerce_sproduct->getQtyAndPrice($tshirtecommerces, $this->request->post['product_id'], $quantity, true);
+						$quantity = ($tshirtecommerce['quantity'] > 1) ? $tshirtecommerce['quantity'] : 1;
+						$option['tshirtecommerce']['price_of_print'] = $tshirtecommerce['price_of_print'];
+						$option['tshirtecommerce']['options'] = $tshirtecommerces;
+
+						// update opencart option
+						if (isset($tshirtecommerces['option_oc']) && !empty($tshirtecommerces['option_oc'])) {
+							$oc_option = array();
+							$str_option_oc = str_replace('&quot;', '"', $tshirtecommerces['option_oc']);
+							$array_option_oc = explode(';;', $str_option_oc);
+							if (count($array_option_oc) > 0) {
+								foreach ($array_option_oc as $row) {
+									if (!empty($row) && $row != '') {
+										$str_row_array = explode('::', $row);
+										if (count($str_row_array) > 1) {
+											$str_row_child = explode(',', $str_row_array[1]);
+											if (count($str_row_child) > 0) {
+												foreach ($str_row_child as $r) {
+													if (!empty($r) && $r != '') $oc_option[$str_row_array[0]][] = $r;
+												}
+											}
+										}
+									}
+								}
+							}
+							if (count($oc_option) > 0) {
+								foreach ($oc_option as $key => $value) {
+									if (isset($product_options) && count($product_options) > 0) {
+										foreach ($product_options as $po) {
+											if ($po['product_option_id'] == $key) {
+												if ($po['type'] == 'text' || $po['type'] == 'textarea' || $po['type'] == 'file' || $po['type'] == 'date' || $po['type'] == 'datetime' || $po['type'] == 'time' || $po['type'] == 'select' || $po['type'] == 'radio') {
+													$option[$key] = isset($value[0]) ? $value[0] : '';
+												} else {
+													$option[$key] = $value;
+												}
+												break;
+											}
+										}
+									} else {
+										$option[$key] = $value;
+									}
+								}
+							}
+						}
+					}
+				} else {
+					/* @since 4.2.2: Fixed add to cart design template */
+					$tshirtecommerce = $this->model_tshirtecommerce_sproduct->addDesignTemplate2Cart($this->request->post['product_id']);
+					if (count($tshirtecommerce)) {
+						$option['tshirtecommerce'] = $tshirtecommerce;
+					}
+				}
+			]]></add>
+		</operation>
+
+		<!-- for get price to calculating total price on footer -->
+		<operation error="skip">
+			<search position="before"><![CDATA[
+				$products = $this->cart->getProducts();
+			]]></search>
+			<add><![CDATA[
+				/* Path: vqmod/xml/tshirtecommerce_product.xml */
+				$this->load->model('tshirtecommerce/order');
+			]]></add>
+		</operation>
+
+		<!-- Display tshirtecommerce attributes on shopping cart -->
+		<operation error="skip">
+			<search position="before"><![CDATA[
+				$data['products'][]
+			]]></search>
+			<add><![CDATA[
+				/* Path: vqmod/xml/tshirtecommerce_product.xml */
+				$tshirtecommerce = $this->model_tshirtecommerce_order->getCartOption($product['cart_id']);
+				$tshirtecommerce = isset($tshirtecommerce['tshirtecommerce']) ? $tshirtecommerce['tshirtecommerce'] : array();
+				if (count($tshirtecommerce) > 0) $tshirtecommerce['parent_id'] = $product['product_id'];
+
+				// extend option_data here
+				$option_data_new = $this->model_tshirtecommerce_order->extendOptions($tshirtecommerce, $option_data);
+				$option_data = $option_data_new;
+			]]></add>
+		</operation>
+
+		<!-- for update quantity -->
+		<operation error="skip">
+			<search position="replace"><![CDATA[
+				$this->cart->update($key, $value);
+			]]></search>
+			<add><![CDATA[
+				$this->load->model('tshirtecommerce/order');
+				$tcheck = $this->model_tshirtecommerce_order->editCart($key);
+				if ($tcheck['error'] == 0) {
+					$this->cart->update($key, $value);
+				} else {
+					$this->session->data['error'] = $tcheck['msg'];
+				}
+			]]></add>
+		</operation>
+	</file>
+
+	<!-- Re-update price on shopping cart -->
+	<file error="skip" name="system/library/cart/cart.php,system/storage/modification/system/library/cart/cart.php">
+		<operation error="skip">
+			<search position="before"><![CDATA[
+				$product_data[] = array
+			]]></search>
+			<add><![CDATA[
+				/* vqmod/xml/tshirtecommerce_product.xml */
+				$tshirtecommerce_price = 0;
+				$tshirtecommerce_cart_options = json_decode($cart['option'], true);
+				if (isset($tshirtecommerce_cart_options['tshirtecommerce']) && count($tshirtecommerce_cart_options['tshirtecommerce'])) {
+					$tshirtecommerce = $tshirtecommerce_cart_options['tshirtecommerce'];
+					if (isset($tshirtecommerce['options']) && isset($tshirtecommerce['price_of_print']))
+						$tshirtecommerce_price = $tshirtecommerce['price_of_print'];
+				}
+				$option_price += $tshirtecommerce_price;
+		]]></add>
+		</operation>
+
+		<!-- get data for confirm order -->
+		<operation error="skip">
+			<search position="after"><![CDATA[
+				$product_data[] = array(
+			]]></search>
+			<add><![CDATA[
+				'tshirtecommerce' => isset($tshirtecommerce_cart_options['tshirtecommerce']) ? $tshirtecommerce_cart_options['tshirtecommerce'] : array(), /* vqmod/xml/tshirtecommerce_product.xml */
+		]]></add>
+		</operation>
+	</file>
+
+	<!-- confirm order -->
+	<file error="skip" name="catalog/controller/checkout/confirm.php,system/storage/modification/catalog/controller/checkout/confirm.php">
+		<operation error="skip">
+			<search position="after"><![CDATA[
+				$order_data['products'][] = array(
+			]]></search>
+			<add><![CDATA[
+				'tshirtecommerce' => (isset($product['tshirtecommerce']) && count($product['tshirtecommerce']) > 0) ? $product['tshirtecommerce'] : array(), /* vqmod/xml/tshirtecommerce_product.xml */
+			]]></add>
+		</operation>
+	</file>
+
+	<file error="skip" name="catalog/model/checkout/order.php,system/storage/modification/catalog/model/checkout/order.php">
+		<!-- add new order -->
+		<operation error="skip">
+			<search position="after" index="1"><![CDATA[
+				$order_product_id = $this->db->getLastId();
+			]]></search>
+			<add><![CDATA[
+				/* vqmod/xml/tshirtecommerce_product.xml */
+				if (isset($product['tshirtecommerce']) && count($product['tshirtecommerce']) > 0) {
+					$json_tshirtecommerce = json_encode($product['tshirtecommerce']);
+					$this->db->query("INSERT INTO `".DB_PREFIX."tshirtdesign_order` SET `order_product_id`='".(int)$order_product_id."',`options`='".$this->db->escape($json_tshirtecommerce)."'");
+				}
+			]]></add>
+		</operation>
+
+		<!-- Update content to send email -->
+		<operation error="skip">
+			<search position="before"><![CDATA[
+				$data['products'][] = array(
+			]]></search>
+			<add><![CDATA[
+				/* vqmod/xml/tshirtecommerce_product.xml */
+				$this->load->model('tshirtecommerce/order');
+				$tshirtecommerce = $this->model_tshirtecommerce_order->getOrderHistory($product['order_product_id'], $product['product_id']);
+				if (count($tshirtecommerce) > 0) {
+					foreach ($tshirtecommerce as $row) {
+						$option_data[] = array(
+							'name' => $row['name'],
+							'value' => $row['value']
+						);
+					}
+				}
+			]]></add>
+		</operation>
+	</file>
+
+	<!-- get info for display on client order history -->
+	<file error="skip" name="catalog/controller/account/order.php,system/storage/modification/catalog/controller/account/order.php">
+		<operation error="skip">
+			<search position="before"><![CDATA[
+				$data['products'][] = array(
+			]]></search>
+			<add><![CDATA[
+				/* vqmod/xml/tshirtecommerce_product.xml */
+				$this->load->model('tshirtecommerce/order');
+				$tshirtecommerce = $this->model_tshirtecommerce_order->getOrderHistory($product['order_product_id'], $product['product_id']);
+				if (count($tshirtecommerce) > 0) {
+					foreach ($tshirtecommerce as $row) {
+						$option_data[] = array(
+							'name' => $row['name'],
+							'value' => $row['value']
+						);
+					}
+				}
+			]]></add>
+		</operation>
+	</file>
+
+	<!-- display on admin order history -->
+	<file error="skip" name="admin/controller/sale/order.php,system/storage/modification/admin/controller/sale/order.php">
+		<operation error="skip">
+			<search position="before"><![CDATA[
+				$data['products'][] = array(
+			]]></search>
+			<add><![CDATA[
+				/* vqmod/xml/tshirtecommerce_product.xml */
+				$this->load->model('tshirtecommerce/order');
+				$tshirtecommerce = $this->model_tshirtecommerce_order->getOrderHistory($product['order_product_id'], $product['product_id']);
+				if (count($tshirtecommerce) > 0) {
+					foreach ($tshirtecommerce as $row) {
+						$option_data[] = array(
+							'name' => $row['name'],
+							'value' => $row['value'],
+							'type' => $row['type']
+						);
+					}
+				}
+				$this->load->language('sale/order');
+			]]></add>
+		</operation>
+	</file>
+
+	<!-- send mail on opencart 3 -->
+	<file error="skip" name="catalog/controller/mail/order.php,system/storage/modification/catalog/controller/mail/order.php">
+		<operation error="skip">
+			<search position="before"><![CDATA[
+				$data['products'][] = array(
+			]]></search>
+			<add><![CDATA[
+				$this->load->model('tshirtecommerce/order');
+				$tshirtecommerce = $this->model_tshirtecommerce_order->getOrderHistory(
+					$order_product['order_product_id'], 
+					$order_product['product_id']
+				);
+				if (count($tshirtecommerce) > 0) {
+					foreach ($tshirtecommerce as $row) {
+						$option_data[] = array(
+							'name' => $row['name'],
+							'value' => $row['value']
+						);
+					}
+				}
+			]]></add>
+		</operation>
+	</file>
+
+</modification>

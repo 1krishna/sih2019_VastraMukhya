@@ -1,0 +1,29 @@
+<modification>
+	<id>tshirtecommerce</id>
+	<version>4.2.2</version>
+	<vqmver>2.4.0</vqmver>
+	<author>Tshirtecommerce Team</author>
+
+	<file error="skip" name="admin/controller/sale/order.php,system/storage/modification/admin/controller/sale/order.php">
+		<operation error="skip">
+			<search position="before"><![CDATA[
+				$product_data[] = array(
+			]]></search>
+			<add><![CDATA[
+				$this->load->model('tshirtecommerce/order');
+				$tshirtecommerce = $this->model_tshirtecommerce_order->getOrderHistory($product['order_product_id'], $product['product_id']);
+				if (count($tshirtecommerce) > 0) {
+					foreach ($tshirtecommerce as $row) {
+						$option_data[] = array(
+							'name' => $row['name'],
+							'value' => $row['value'],
+							'type' => $row['type']
+						);
+					}
+				}
+				$this->load->language('sale/order');
+			]]></add>
+		</operation>
+	</file>
+
+</modification>

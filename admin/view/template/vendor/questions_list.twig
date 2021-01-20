@@ -1,0 +1,320 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <a href="{{ setting }}" data-toggle="tooltip" title="{{ button_setting }}" class="btn btn-default"><i class="fa fa-cog fa-fw"></i></a>
+        <button type="button" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger" onclick="confirm('{{ text_confirm }}') ? $('#form-questions').submit() : false;"><i class="fa fa-trash-o"></i></button>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    {% if success %}
+    <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+	 <div class="panel panel-default">
+		<div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-list"></i> {{ text_list }}</h3>
+      </div>
+    <div class="panel-body">
+    	<div class="well">
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="control-label" for="input-name">{{ column_name }}</label>
+                <input type="text" name="filter_name" value="{{ filter_name }}" placeholder="{{ column_name }}" id="input-product" class="form-control" />
+              </div>
+             </div>
+             <div class="col-sm-4">
+              <div class="form-group">
+                <label class="control-label" for="input-vendor">{{ entry_vendor }}</label>
+                <input type="text" name="filter_vendor" value="{{ filter_product }}" placeholder="{{ entry_vendor }}" id="input-vendor" class="form-control" />
+                  <input type="hidden" name="vendor_id"/>
+              </div>
+             </div>
+             <div class="col-sm-4">
+              <div class="form-group">
+                <label class="control-label" for="input-name">{{ column_productname }}</label>
+                <input type="text" name="filter_product" value="{{ filter_product }}" placeholder="{{ column_productname }}" id="input-product" class="form-control" />
+              </div>
+             </div>
+              <div class="col-sm-2">
+                <button style="margin-top: 37px;" type="button" id="button-filter" class="btn btn-primary"><i class="fa fa-filter"></i> filter</button>
+              </div>
+            </div>
+            </div>
+      <form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-questions">
+		<div class="table-responsive">
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <td width="1" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
+              
+                    <td class="text-left">{{ column_productimage }}</td>
+                    
+                     <td class="text-left">{% if sort == 'pd.name' %}
+                    <a href="{{ sort_productname }}" class="{{ order|lower }}">{{ column_productname }}</a>
+                    {% else %}
+                    <a href="{{ sort_productname }}">{{ column_productname }}</a>
+                    {% endif %}</td>
+
+                     <td class="text-left">{% if sort == 'uq.name' %}
+                    <a href="{{ sort_name }}" class="{{ order|lower }}">{{ column_name }}</a>
+                    {% else %}
+                    <a href="{{ sort_name }}">{{ column_name }}</a>
+                    {% endif %}</td>
+                    <td class="text-left">{{ column_email }}</td>
+                    <td class="text-left">{{ column_question }}</td>
+                   
+
+          
+                    <td class="text-left">{% if sort == 'uq.date_added' %}
+                    <a href="{{ sort_date_added }}" class="{{ order|lower }}">{{ column_date }}</a>
+                    {% else %}
+                    <a href="{{ sort_date_added }}">{{ column_date }}</a>
+                    {% endif %}</td>
+                  
+
+
+                <td class="text-right">{{ column_approve }}</td>
+              <td class="text-right">{{ column_action }}</td>
+            </tr>
+          </thead>          
+            {% if questions %}
+            {% for category in questions %}
+			<tbody id="question_id_{{ category.user_question_id }}">
+            <tr>
+              <td class="text-center">{% if category.selected %}
+                <input type="checkbox" name="selected[]" value="{{ category.user_question_id }}" checked="checked" />
+                {% else %}
+                <input type="checkbox" name="selected[]" value="{{ category.user_question_id }}" />
+                {% endif %}</td>
+              
+               <td class="text-left">{{ category.sellername }}</td>
+              <td class="text-left">{{ category.product_name }}</td>
+              <td class="text-left">{{ category.name }}<input type="hidden" id="show_id_{{ category.user_question_id }}"  value="{{ category.showquestion }}"></td>              
+              <td class="text-left">{{ category.email }}</td>
+              <td class="text-left">{{ category.question }}</td>
+              <td class="text-left">{{ category.date_added }}</td>             
+              <td class="text-right">
+				{% if category.approve %}
+					<a href="{{ category.approve }}" data-toggle="tooltip" title="{{ button_approve }}" class="btn btn-success"><i class="fa fa-thumbs-o-up"></i></a>
+					{% else %}
+					<button type="button" class="btn btn-danger" disabled><i class="fa fa-thumbs-o-up"></i></button>
+					{% endif %}
+					
+					{% if category.disapproved %}
+					<a href="{{ category.disapproved }}" data-toggle="tooltip" title="{{ button_desapprove }}" class="btn btn-success"><i class="fa fa-thumbs-o-down"></i></a>
+					{% else %}
+					<button type="button" class="btn btn-success" disabled><i class="fa fa-thumbs-o-down"></i></button>
+					{% endif %}				
+			  </td>               
+              <td class="text-right">
+                  <a href="{{ category.view }}" data-toggle="tooltip" title="{{ button_view }}" class="btn btn-info"><i class="fa fa-eye"></i></a>
+              </td>
+            </tr>
+            {% endfor %}
+			</tbody>
+            {% else %}
+			<tbody>
+            <tr>
+              <td style="padding:10px;" class="text-center" colspan="10">{{ text_no_results }}</td>
+            </tr>
+			</tbody>
+            {% endif %}
+          
+        </table>
+		</div>
+      </form>
+      <div class="row">
+          <div class="col-sm-6 text-left">{{ pagination }}</div>
+          <div class="col-sm-6 text-right">{{ results }}</div>
+        </div>
+    </div>
+  </div>
+</div>
+</div>
+<script><!--
+function answerQuestion(user_question_id){
+	var question = $('#question_id_'+user_question_id).html();
+	var showquestion = $('#show_id_'+user_question_id).val();
+	var data = '<td style="padding:10px;"  colspan="10"><textarea class="form-control" name="answer" id="'+user_question_id+'" cols="25" rows="5"></textarea><br />';
+	data +='{{ text_showQuestion }}<br />';
+    {% if showquestion==1 %}
+	data +='<span style="padding:10px;" >{{ text_yes }}</span><input type="radio" value="1" name="showquestion'+user_question_id+'" checked="checked"/>';
+	data +='<span style="padding:10px;" >{{ text_no }}</span><input type="radio" value="0" name="showquestion'+user_question_id+'" /><br />&nbsp;';
+    {% else %}
+	data +='<span style="padding:10px;" >{{ text_yes }}</span>input type="radio" value="1" name="showquestion'+user_question_id+'" />&nbsp;';
+	data +='<span style="padding:10px;" >{{ text_no }}</span><input type="radio" value="0" name="showquestion'+user_question_id+'" checked="checked" /><br />';
+    {% endif %}
+	
+	data += '<br /><a class="btn btn-primary" id="answer'+user_question_id+'">{{ button_answer }}</a> &nbsp;<a class="btn btn-primary" id="back'+user_question_id+'">{{ button_back }}</a></td>';
+	
+	$('#question_id_'+user_question_id).html(data)
+	
+$('#answer'+user_question_id).on('click', function() {
+	$.ajax({
+		url: 'index.php?route=vendor/questions/answer&user_token={{ user_token }}&user_question_id='+user_question_id,
+		type: 'post',
+		dataType: 'json',
+		data: 'answer=' + encodeURIComponent($('#'+user_question_id).val()) +'&showquestion='+encodeURIComponent($('input[name=showquestion'+user_question_id+']:checked').val()),
+		beforeSend: function() {
+			$('.success, .warning').remove();
+			$('#answer'+user_question_id).attr('disabled', true);
+			$('.panel-body').after('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i>{{ text_wait }}</div>');
+		},
+		complete: function() {
+			$('#answer'+user_question_id).attr('disabled', false);
+			$('.alert-danger').remove();
+		},
+		success: function(data) {
+			if (data['error']) {
+				$('.panel-body').after('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i>' + data['error'] + '</div>');
+			}			 
+			if (data['success']) {
+				$('.panel-body').after('<div class="alert alert-success"><i class="fa fa-check-circle"></i>' + data['success'] + '</div>');				
+				$('#question_id_'+user_question_id).html(updateQuestion(data['updated_question']));
+			}
+		}
+	});
+});
+$('#back'+user_question_id).bind('click', function() {
+	$('#question_id_'+user_question_id).html(question);
+});
+}
+
+function updateQuestion(data){
+var html ='	<tr>';
+	html +='  <td style="text-align: center;"><input type="checkbox" name="selected[]" value="'+data['user_question_id']+'" /></td>';
+	html +='  <td class="text-left"> '+data['product_name']+'</td>';
+	html +='  <td class="text-left"><img src="'+data['product_image']+'" alt="'+data['product_name']+'"/></td>';
+	html +='  <td class="text-left">'+data['name']+'<input type="hidden" id="show_id_'+data['user_question_id']+'"  value="'+data['showquestion']+'"></td>';
+	html +='  <td class="text-left">'+data['email']+'</td>';
+	html +='  <td class="text-left">'+data['question']+'</td>';
+	html +='  <td class="text-left">'+data['date_added']+'</td>';
+	html +='  <td class="text-right">';
+	$.each(data['action'],function(key,action){
+		if(data['answered']==0){
+		html +='<a onClick="answerQuestion('+data['user_question_id']+')" data-toggle="tooltip" title="{{ button_reply }}" class="btn btn-primary"><i class="fa fa-reply"></a>';
+		}else{
+		html +='<a data-toggle="tooltip" title="{{ button_answerd }}" class="btn btn-default"><i class="fa fa-reply"></i></a>';
+		}
+	}); 
+	html +='</td>';		
+	html +='	<td class="text-left">'+data['get_answer']+'</td>';
+	html +='	<td class="text-left">'+data['get_answer_on']+'</td>';
+	html +='</tr>';
+	return html;
+}
+
+
+--></script>
+<script type="text/javascript"><!--
+$('input[name=\'filter_name\']').autocomplete({
+  'source': function(request, response) {
+    $.ajax({
+      url: 'index.php?route=customer/customer/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+      dataType: 'json',     
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item['name'],
+            value: item['customer_id']
+          }
+        }));
+      }
+    });
+  },
+  'select': function(item) {
+    $('input[name=\'filter_name\']').val(item['label']);
+  } 
+});
+</script>
+<script type="text/javascript"><!--
+$('input[name=\'filter_product\']').autocomplete({
+  'source': function(request, response) {
+    $.ajax({
+      url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+      dataType: 'json',
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item['name'],
+            value: item['product_id']
+          }
+        }));
+      }
+    });
+  },
+  'select': function(item) {
+    $('input[name=\'filter_product\']').val(item['label']);
+  }
+});
+
+</script>
+
+<script type="text/javascript"><!--
+$('#button-filter').on('click', function() {
+	var url = 'index.php?route=vendor/questions&user_token={{ user_token }}';
+
+	var filter_name = $('input[name=\'filter_name\']').val();
+
+	if (filter_name) {
+		url += '&filter_name=' + encodeURIComponent(filter_name);
+	}
+
+	var filter_product = $('input[name=\'filter_product\']').val();
+
+	if (filter_product) {
+		url += '&filter_product=' + encodeURIComponent(filter_product);
+	}
+
+  var filter_vendor = $('input[name=\'vendor_id\']').val();
+
+  if (filter_vendor) {
+    url += '&filter_vendor=' + encodeURIComponent(filter_vendor);
+  }
+
+	location = url;
+});
+</script>
+
+<script type="text/javascript"><!--
+    
+// Seller
+$('input[name=\'filter_vendor\']').autocomplete({
+  'source': function(request, response) {
+    $.ajax({
+      url: 'index.php?route=vendor/vendor/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+      dataType: 'json',
+      success: function(json) {
+  
+        response($.map(json, function(item) {
+          return {
+            label: item['firstname'],
+            value: item['vendor_id']
+          }
+        }));
+      }
+    });
+  },
+  'select': function(item) {
+    $('input[name=\'filter_vendor\']').val(item['label']);
+    $('input[name=\'vendor_id\']').val(item['value']);
+  }
+});
+</script>
+{{ footer }}

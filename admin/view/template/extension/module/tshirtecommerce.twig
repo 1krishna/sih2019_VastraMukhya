@@ -1,0 +1,589 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  	<div class="page-header">
+    	<div class="container-fluid">
+      		<h1>{{ heading_title }} - Settings</h1>
+      		<ul class="breadcrumb">
+	        	{% for breadcrumb in breadcrumbs %}
+					<li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+				{% endfor %}
+      		</ul>
+    	</div>
+  	</div>
+  	<div class="container-fluid">
+		{% if error_warning %}
+			<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+		{% endif %}
+		{% if success %}
+			<div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }}
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+		{% endif %}
+	    <div class="panel panel-default">
+	    	<div class="panel-heading">
+	    		<div class="pull-right">
+	    			<a id="btn-quicksetup" class="btn btn-success btn-sm" href="javascript:void(0)" style="color: #fff;"><strong>{{ tshirtecommerce_quicksetup_label }}</strong></a>
+	    		</div>
+	    		<h3 class="panel-title">
+	    			<i class="fa fa-list"></i> {{ heading_title }}
+	    		</h3>
+	    	</div>
+	      	<div class="panel-body">	
+				<form action="{{ link }}" method="post" id="form-attribute" class="form-horizontal">
+					<ul class="nav nav-tabs">
+						<li class="active"><a href="#tab-system" data-toggle="tab">System</a></li>
+						<!--<li><a href="#tab-order" data-toggle="tab">Order</a></li>-->
+						<li><a href="#tab-product" data-toggle="tab">Product</a></li>
+						<li><a href="#tab-customer" data-toggle="tab">Customer</a></li>
+						<li><a href="#tab-seo" data-toggle="tab">SEO</a></li>
+						<li><a href="#tab-customization" data-toggle="tab">Customize Button</a></li>
+						<li style="display:none"><a href="#tab-hook" data-toggle="tab">Hook</a></li><!-- for add package -->
+						<li><a href="{{ advanced_url }}">Advanced</a></li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane active" id="tab-system">
+							<div class="form-group">
+								<label class="col-sm-2 control-label">
+									{{ tshirtecommerce_product_default_label }}
+								</label>
+								<div class="col-sm-10">
+									{% if products == 0 %}
+										<label class="control-label"><strong style="color:red;"><i>{{ tshirtecommerce_product_msg }}</i></strong></label>
+									{% else %}
+										<select name="tshirtecommerce_product" class="form-control">
+											{% for product in products %}
+												{% if product_id == product['product_id'] %}
+													<option selected="selected" value="{{ product['product_id'] }}">{{ product['name'] }}</option>
+												{% else %}
+													<option value="{{ product['product_id'] }}">{{ product['name'] }}</option>
+												{% endif %}
+											{% endfor %}
+										</select>
+									{% endif %}
+									<span class="help-block">{{ tshirtecommerce_product_default_label_help }}</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for='tshirtecommerce_code' class='col-sm-2 control-label'>
+									{{ tshirtecommerce_purchase_code_label }}
+								</label>
+								<div class='col-sm-10'>
+									<div class="row">
+										<div class="col-xs-12 col-sm-9">
+											<input type='text' class='form-control' id='tshirtecommerce_code' name='tshirtecommerce_code' value='{{ (tshirtecommerce_code is defined) ? tshirtecommerce_code : "" }}' />
+										</div>
+										<div class="col-xs-12 col-sm-3">
+											{% if tshirtecommerce_verify is defined and tshirtecommerce_verify|length > 0 %}
+												{% if tshirtecommerce_verify['error'] is defined and tshirtecommerce_verify['error'] == 0 %}
+													<span id="status-verify" style="background-color:#dff0d8;color:#3c763d;line-height: 1.42857;" class="input-group-addon" aria-hidden="true"><strong><i class="fa fa-check" aria-hidden="true"></i> {{ tshirtecommerce_verified_lable }} </strong></span>
+												{% else %}
+													<span id="status-verify" style="background-color:#f2dede;color:#a94442;line-height: 1.42857;" class="input-group-addon" aria-hidden="true"><strong><i class="fa fa-times" aria-hidden="true"></i> {{ tshirtecommerce_not_verified_lable }} </strong></span>
+												{% endif %}
+											{% endif %}
+										</div>
+										<div class="col-sm-12">
+											<p class="text-muted">
+												<a target="_blank" href="https://help.market.envato.com/hc/en-us/articles/202822600-Where-Is-My-Purchase-Code-"><i>{{ tshirtecommerce_purchase_code_label_help_2 }}</i></a><br/>
+												<span class="help-block">{{ tshirtecommerce_purchase_code_label_help }}</span>
+											</p>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for='tshirtecommerce_allow_taxes'>
+									{{ tshirtecommerce_enable_taxes_label }}
+								</label>
+								<div class="col-sm-10">
+									<label class="radio-inline">
+										<input type="radio" name="tshirtecommerce_allow_taxes" value="1" {% if tshirtecommerce_allow_taxes is not defined or tshirtecommerce_allow_taxes == 1 %} {{ 'checked' }} {% endif %} /> {{ tshirtecommerce_addon_campaign_yes }} 
+									</label>
+									<label class="radio-inline">
+										<input type="radio" name="tshirtecommerce_allow_taxes" value="0" {% if tshirtecommerce_allow_taxes is defined and tshirtecommerce_allow_taxes == 0 %} {{ 'checked' }} {% endif %} /> {{ tshirtecommerce_addon_campaign_no }} 
+									</label>
+									<span class="help-block">{{ tshirtecommerce_enable_taxes_label_help }}</span>
+								</div>
+							</div>
+
+							<div class="form-group" style="display: none;">
+								<label class="col-sm-2 control-label">
+									<span data-toggle="tooltip" data-original-title="{{ tshirtecommerce_ideas_categories_default_label_help }}">
+										{{ tshirtecommerce_ideas_categories_default_label }}
+									</span>
+								</label>
+								<div class="col-sm-10">
+									{% if tshirtecommerce_categories == 0 %}
+										<label class="control-label"><strong style="color:red;"><i>{{ tshirtecommerce_ideas_categories_msg }}</i></strong></label>
+									{% else %}
+										<select name="tshirtecommerce_category" class="form-control">
+											{% for category in tshirtecommerce_categories %}
+												{% if category_id == category['category_id'] %}
+													<option selected="selected" value="{{ category['category_id'] }}">{{ category['name'] }}</option>
+												{% else %}
+													<option value="{{ category['category_id'] }}">{{ category['name'] }}</option>
+												{% endif %}
+											{% endfor %}
+										</select>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+
+						<div class="tab-pane" id="tab-order">
+							
+						</div>
+
+						<div class="tab-pane" id="tab-product">
+							<fieldset style="display:none">
+								<legend>Product List</legend>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" for="tshirtecommerce_hide_addtocart_list">
+										Hide add to cart
+									</label>
+									<div class="col-sm-10">
+										<label class="radio-inline">
+											<input type="radio" name="tshirtecommerce_hide_addtocart_list" value="1" {% if tshirtecommerce_hide_addtocart_list is defined and tshirtecommerce_hide_addtocart_list == 1 %} {{ 'checked' }} {% endif %} /> {{ tshirtecommerce_addon_campaign_yes }}  
+										</label>
+										<label class="radio-inline">
+											<input type="radio" name="tshirtecommerce_hide_addtocart_list" value="0" {% if tshirtecommerce_hide_addtocart_list is not defined or tshirtecommerce_hide_addtocart_list == 0 %} {{ 'checked' }} {% endif %} /> {{ tshirtecommerce_addon_campaign_no }} 
+										</label>
+										<span class="help-block">Allow hide add to cart button on all list products on front-office</span>
+									</div>
+								</div>
+							</fieldset>
+							<fieldset>
+								<legend>Product Detail</legend>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" for='tshirtecommerce_hide_addtocart'>
+										{{ tshirtecommerce_hide_add2cart_label }}
+									</label>
+									<div class="col-sm-10">
+										<label class="radio-inline">
+											<input type="radio" name="tshirtecommerce_hide_addtocart" value="1" {% if tshirtecommerce_hide_addtocart is defined and tshirtecommerce_hide_addtocart == 1 %} {{ 'checked' }} {% endif %} /> For product with blank design
+										</label>
+										<label class="radio-inline">
+											<input type="radio" name="tshirtecommerce_hide_addtocart" value="2" {% if tshirtecommerce_hide_addtocart is defined and tshirtecommerce_hide_addtocart == 2 %} {{ 'checked' }} {% endif %} /> For all product design
+										</label>
+										<label class="radio-inline">
+											<input type="radio" name="tshirtecommerce_hide_addtocart" value="0" {% if tshirtecommerce_hide_addtocart is not defined or tshirtecommerce_hide_addtocart == 0 %} {{ 'checked' }} {% endif %} /> {{ tshirtecommerce_addon_campaign_no }} 
+										</label>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" for='tshirtecommerce_hide_design_button'>
+										Hide design button
+									</label>
+									<div class="col-sm-10">
+										<label class="radio-inline">
+											<input type="radio" name="tshirtecommerce_hide_design_button" value="1" {% if tshirtecommerce_hide_design_button is defined and tshirtecommerce_hide_design_button == 1 %} {{ 'checked' }} {% endif %} /> For product with design template 
+										</label>
+										<label class="radio-inline">
+											<input type="radio" name="tshirtecommerce_hide_design_button" value="2" {% if tshirtecommerce_hide_design_button is defined and tshirtecommerce_hide_design_button == 2 %} {{ 'checked' }} {% endif %} /> For all product design
+										</label>
+										<label class="radio-inline">
+											<input type="radio" name="tshirtecommerce_hide_design_button" value="0" {% if tshirtecommerce_hide_design_button is not defined or tshirtecommerce_hide_design_button == 0 %} {{ 'checked' }} {% endif %} /> {{ tshirtecommerce_addon_campaign_no }} 
+										</label>
+									</div>
+								</div>
+							</fieldset>
+							
+							<hr/>
+							
+							<fieldset style="display: none;">
+								<legend>Orders</legend>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" for='tshirtecommerce_send_order'>
+										{{ tshirtecommerce_send_order_label }}
+									</label>
+									<div class="col-sm-10">
+										<input type="checkbox" value="1" {% if tshirtecommerce_send_order is not defined or tshirtecommerce_send_order == 1 %} {{ 'checked="checked"' }} {% endif %} name="tshirtecommerce_send_order"> {{ tshirtecommerce_send_order_description }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" for='tshirtecommerce_auto_send_order'>
+										{{ tshirtecommerce_auto_send_order_label }}
+									</label>
+									<div class="col-sm-10">
+										<input type="checkbox" value="1" {% if tshirtecommerce_auto_send_order is not defined or tshirtecommerce_auto_send_order == 1 %} {{ 'checked="checked"' }} {% endif %} name="tshirtecommerce_auto_send_order">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" for='tshirtecommerce_list_send_status'>
+										{{ tshirtecommerce_list_send_status_label }}
+									</label>
+									<div class="col-sm-10">
+										<select name="tshirtecommerce_list_send_status" class="form-control">
+											{% for status in order_statuses %}
+												<option value="{{ status.order_status_id }}" {% if status.order_status_id == tshirtecommerce_list_send_status %} {{ 'selected="selected"' }} {%endif%}> {{ status.name }}</option>
+											{% endfor %}
+										</select>
+									</div>
+								</div>
+							</fieldset>
+						</div>
+
+						<div class="tab-pane" id="tab-customer">
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for='design_downloadable'>
+									{{ tshirtecommerce_donwloadable_design_label }}
+								</label>
+								<div class="col-sm-10">
+									<label class="radio-inline">
+										<input type="radio" name="tshirtecommerce_downloadable" value="1" {% if tshirtecommerce_downloadable is defined and tshirtecommerce_downloadable == 1 %} {{ 'checked' }} {% endif %} /> {{ tshirtecommerce_addon_campaign_yes }}  
+									</label>
+									<label class="radio-inline">
+										<input type="radio" name="tshirtecommerce_downloadable" value="0" {% if tshirtecommerce_downloadable is not defined or tshirtecommerce_downloadable == 0 %} {{ 'checked' }} {% endif %} /> {{ tshirtecommerce_addon_campaign_no }} 
+									</label>
+									<span class="help-block">{{ tshirtecommerce_donwloadable_design_label_help }}</span>
+								</div>
+							</div>
+						</div>
+
+						<div class="tab-pane" id="tab-seo">
+							<div class="form-group">
+				      			<label class="col-sm-2 control-label">{{ tshirtecommerce_seo_system_label }}</label>
+				      			<div class="col-sm-10">
+				      				<label class="radio-inline">
+										<input type="radio" name="tshirtecommerce_seo_enable" value="1" {% if tshirtecommerce_seo_enable is defined and tshirtecommerce_seo_enable == 1 %} {{ 'checked' }} {% endif %} /> {{ tshirtecommerce_addon_campaign_yes }} 
+									</label>
+									<label class="radio-inline">
+										<input type="radio" name="tshirtecommerce_seo_enable" value="0" {% if tshirtecommerce_seo_enable is not defined or tshirtecommerce_seo_enable == 0 %} {{ 'checked' }} {% endif %} /> {{ tshirtecommerce_addon_campaign_no }} 
+									</label>
+				      			</div>
+				      		</div>
+				      		<div class="form-group">
+				      			<label class="col-sm-2 control-label">{{ tshirtecommerce_seo_default_label }}</label>
+				      			<div class="col-sm-10">
+				      				<input type="text" class="form-control" value="{{ tshirtecommerce_seo_default_keyword }}" name="tshirtecommerce_seo_default_keyword" />
+				      				<div class="text-muted"><span>{{ tshirtecommerce_seo_keyword_help }}</span></div>
+				      			</div>
+				      		</div>
+
+				      		<div class="form-group">
+				      			<label class="col-sm-2 control-label">{{ tshirtecommerce_seo_ideas_default_label }}</label>
+				      			<div class="col-sm-10">
+				      				<input type="text" class="form-control" value="{{ tshirtecommerce_seo_ideas_default_keyword }}" name="tshirtecommerce_seo_ideas_default_keyword" />
+				      				<div class="text-muted"><span>{{ tshirtecommerce_seo_ideas_keyword_help }}</span></div>
+				      				<div class="text-muted"><span>{{ tshirtecommerce_seo_ideas_default_url }}</span></div>
+				      			</div>
+				      		</div>
+						</div>
+
+						<div class="tab-pane" id="tab-customization">
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ tshirtecommerce_custom_button_label }}</label>
+								<div class='col-sm-10'>
+									<div style="width: 50%; float:left;">
+										<div style="width: 100%;clear:both;">
+											<span class="col-sm-3 control-label">{{ tshirtecommerce_custom_button_label_fc }}</span>
+											<div class="col-sm-9">
+												<input id="tshirtecommerce_css_font_color" type="text" value="{{ tshirtecommerce_customize_styles['color'] }}" class="jscolor {onFineChange:'update(this, 0)'} form-control" style="max-width: 100px;" />
+											</div>
+										</div>
+										<div style="width: 100%;clear:both;">
+											<span class="col-sm-3 control-label">{{ tshirtecommerce_custom_button_label_fz }}</span>
+											<div class="col-sm-9">
+												<input id="tshirtecommerce_css_font_size" type="text" value="{{ tshirtecommerce_customize_styles['font_size'] }}" class="form-control" style="max-width: 100px; display: inline-block; float:left;" />
+												<input onchange="update(this, 1)" type="range" value="{{ tshirtecommerce_customize_styles['font_size'] }}" step="1" min="8" max="60" class="form-control" style="max-width: 300px; display: inline-block; float:left; line-height: 35px;" />
+											</div>
+										</div>
+										<div style="width: 100%;clear:both;">
+											<span class="col-sm-3 control-label">{{ tshirtecommerce_custom_button_label_pd }}</span>
+											<div class="col-sm-9">
+												<input id="tshirtecommerce_css_padding" type="text" value="{{ tshirtecommerce_customize_styles['padding'] }}" class="form-control" style="max-width: 100px; display: inline-block; float:left;" />
+												<input onchange="update(this, 2)" type="range" value="{{ tshirtecommerce_customize_styles['padding'] }}" step="1" min="0" max="50" class="form-control" style="max-width: 300px; display: inline-block; float:left; line-height: 35px;" />
+											</div>
+										</div>
+										<div style="width: 100%;clear:both;">
+											<span class="col-sm-3 control-label">{{ tshirtecommerce_custom_button_label_bd }}</span>
+											<div class="col-sm-9">
+												<input id="tshirtecommerce_css_border_radius" type="text" value="{{ tshirtecommerce_customize_styles['border_radius'] }}" class="form-control" style="max-width: 100px; display: inline-block; float:left;" />
+												<input onchange="update(this, 3)" type="range" value="{{ tshirtecommerce_customize_styles['border_radius'] }}" step="1" min="0" max="50" class="form-control" style="max-width: 300px; display: inline-block; float:left; line-height: 35px;" />
+											</div>
+										</div>
+										<div style="width: 100%;clear:both;">
+											<span class="col-sm-3 control-label">{{ tshirtecommerce_custom_button_label_bc }}</span>
+											<div class="col-sm-9">
+												<input id="tshirtecommerce_css_border_color" type="text" value="{{ tshirtecommerce_customize_styles['border_color'] }}" class="jscolor {onFineChange:'update(this, 0)'} form-control" style="max-width: 100px;" />
+											</div>
+										</div>
+										<div style="width: 100%;clear:both;">
+											<span class="col-sm-3 control-label">{{ tshirtecommerce_custom_button_label_bs }}</span>
+											<div class="col-sm-9">
+												<select id="tshirtecommerce_css_border_style" class="form-control" style="max-width: 100px;">
+													<option value="solid" {% if tshirtecommerce_customize_styles['border_style'] == 'solid' %} {{ 'selected' }} {% endif %}>solid</option>
+													<option value="dotted" {% if tshirtecommerce_customize_styles['border_style'] == 'dotted' %} {{ 'selected' }} {% endif %}>dotted</option>
+												</select>
+											</div>
+										</div>
+										<div style="width: 100%;clear:both;">
+											<span class="col-sm-3 control-label">{{ tshirtecommerce_custom_button_label_bw }}</span>
+											<div class="col-sm-9">
+												<input id="tshirtecommerce_css_border_width" type="text" value="{{ tshirtecommerce_customize_styles['border_width'] }}" class="form-control" style="max-width: 100px; display: inline-block; float:left;" />
+												<input onchange="update(this, 4)" type="range" value="{{ tshirtecommerce_customize_styles['border_width'] }}" step="1" min="0" max="100" class="form-control" style="max-width: 300px; display: inline-block; float:left; line-height: 35px;" />
+											</div>
+										</div>
+										<div style="width: 100%;clear:both;">
+											<span class="col-sm-3 control-label">{{ tshirtecommerce_custom_button_label_bg }}</span>
+											<div class="col-sm-9">
+												<input id="tshirtecommerce_css_bg_color" type="text" value="{{ tshirtecommerce_customize_styles['background_color'] }}" class="jscolor {onFineChange:'update(this, 0)'} form-control" style="max-width: 100px;" />
+											</div>
+										</div>
+									</div>
+									<div style="width: 50%; float:left; padding: 60px 30px; text-align: center;border: 1px solid #cdcdcd;">
+										<span class="tshirtecommerce-button" href="javascript:void(0)" style="{{ tshirtecommerce_customize_design_btn }}">Custom Your Design</span>
+									</div>
+									<input type="hidden" id="tshirtecommerce_customize_design_btn" name="tshirtecommerce_customize_design_btn" value="{% if tshirtecommerce_customize_design_btn is defined %} {{ tshirtecommerce_customize_design_btn }} {% endif %}" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ tshirtecommerce_logo_loading_label }}</label>
+								<div class="col-sm-10">
+									<a id="thumb_tshirtecommerce_logo_loading" data-toggle="image" class="img-thumbnail">
+										<img alt='logo loading' title="logo loading" src="{{ tshirtecommerce_logo_loading }}" data-placeholder="{{ tshirtecommerce_logo_loading }}" style="max-width: 100px; max-height: 100px;" />
+									</a>
+									 <input type="hidden" name="tshirtecommerce_logo_loading" value="{{ tshirtecommerce_logo_loading }}" id="tshirtecommerce_logo_loading" />
+									<div class="text-muted">
+										<span>{{ tshirtecommerce_logo_loading_label_help }}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="tab-pane" id="tab-hook"></div><!-- for add package -->
+					</div>
+				</form>		
+	      	</div>
+	      	<div class="panel-footer">
+	      		<center>
+		      		<button type="submit" form="form-attribute" class="btn btn-primary" style="min-width:20%;">{{ tshirtecommerce_seo_action_save_label }}</button>
+    			</center>
+	      	</div>
+	    </div>
+  	</div>
+</div>
+
+<!-- Quicksetup Modal -->
+<link rel="stylesheet" href="{{ site_url }}/tshirtecommerce/opencart/quicksetup/css/setup.css" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ site_url }}/tshirtecommerce/opencart/quicksetup/css/quicksetup.css" type="text/css" media="all" />
+
+<script type="text/javascript" src="{{ site_url }}/tshirtecommerce/opencart/quicksetup/js/quicksetup.js"></script>
+<script type="text/javascript">
+	var ajax_tool 		= '{{ quicksetup["ajax_tool"] }}';
+	var ajax_clipart 	= '{{ quicksetup["ajax_clipart"] }}';
+	var ajax_import 	= '{{ quicksetup["ajax_import"] }}';
+	var ajax_finish 	= '';
+</script>
+
+<script src="view/javascript/jscolor.js" type="text/javascript" charset="utf-8" async defer></script>
+<script type="text/javascript">
+	function update(e, isRange) {
+		if (isRange == 1) {
+			$('#tshirtecommerce_css_font_size').val($(e).val());
+		} else if (isRange == 2) {
+			$('#tshirtecommerce_css_padding').val($(e).val());
+		} else if (isRange == 3) {
+			$('#tshirtecommerce_css_border_radius').val($(e).val());
+		} else if (isRange == 4) {
+			$('#tshirtecommerce_css_border_width').val($(e).val());
+		}
+
+		$('.tshirtecommerce-button').css({
+			'color': '#'+$('#tshirtecommerce_css_font_color').val(),
+			'font-size': $('#tshirtecommerce_css_font_size').val()+'px',
+			'padding': $('#tshirtecommerce_css_padding').val()+'px',
+			'border-radius': $('#tshirtecommerce_css_border_radius').val()+'px',
+			'border-color': '#'+$('#tshirtecommerce_css_border_color').val(),
+			'border-style': $('#tshirtecommerce_css_border_style').val(),
+			'border-width': $('#tshirtecommerce_css_border_width').val()+'px',
+			'background-color': '#'+$('#tshirtecommerce_css_bg_color').val(),
+		});
+
+		new_css = $('.tshirtecommerce-button').attr('style');
+		$('#tshirtecommerce_customize_design_btn').val(new_css);
+	    return true;
+	}
+</script>
+
+<div class="modal-quicksetup" id="modal-quicksetup" style="display: none; overflow: hidden;">
+	<div class="modal-content">
+	  	<p class="p-close-quicksetup"><span class="close-quicksetup">&times;</span></p>
+	  	<div class="modal-body">
+	    	<h1 class="logo text-center">
+				<a href="http://tshirtecommerce.com/" target="_blank">
+					<img src="https://tshirtecommerce.com/wp-content/uploads/2015/09/small-logo1.png" alt="tshirtecommerce.com">
+				</a>
+			</h1> 
+			<div class="e-steps">
+				<div class="e-steps-label">
+					<div class="e-step-1 e-step e-step-active" id="quicksetup1">Design Tool <span>1</span></div>
+					<div class="e-step-2 e-step" id="quicksetup2">Cliparts Store <span>2</span></div>
+					<div class="e-step-3 e-step" id="quicksetup3">Import Products <span>3</span></div>
+					<div class="e-step-4 e-step" id="quicksetup4">Finished! <span>4</span></div>
+				</div>
+				<div class="progress">
+				  <div id="progress-bar-step" class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 25%">
+						<span class="sr-only">25%  Complete (success)</span>
+				  </div>
+				</div>
+			</div> <!-- \End Steps -->
+
+			<div id="e-design-tool" class="page-content" style="display: block;">
+				<h2 class="title">Setting Design Tool</h2>
+				<p>Thank you for choosing T-Shirt eCommerce. This quick setup wizard will help you configure the basic settings. It's completely optional and shouldn't take longer than five minutes.</p>
+				<hr/>
+				<form class="form-horizontal" method="post" action="">
+					<div class="form-group">
+						<label class="col-xs-4">Layout of design tool</label>
+						<div class="col-xs-5">
+							{% if quicksetup['layouts'] is defined and quicksetup['layouts']|length > 0 %}
+								<select class="form-control" name="layout">
+									{% for layout, val in quicksetup['layouts'] %}
+									<option value="{{ layout }}" {% if val['theme'] == 'default' %} {{ 'selected' }} {% endif %}>{{ val['title'] }}</option>
+									{% endfor %}
+								</select>
+							{% else %}
+								{{ 'Data Not Found' }} 
+							{% endif %}
+							<div class="col-xs-ofsset-5 col-xs-12 row">
+								<div class="center-block text-muted">You can <a style="color:#0049b0;text-decoration:underline;" href="http://docs.tshirtecommerce.com/knowledgebase/customize-layout-with-color-background-of-design-tool/" target="_blank">add new or customize layout</a></div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-4">Your language</label>
+						<div class="col-xs-5">
+							{% if quicksetup['languages'] is defined and quicksetup['languages']|length > 0 %}
+							<select class="form-control" name="language">
+								{% for key, val in quicksetup['languages'] %}
+								<option value="{{ val['code'] }}" {% if val['default'] == 1 %} {{ 'selected' }} {% endif %}>{{ val['title'] }}</option>
+								{% endfor %}
+							</select>
+							{% else %}
+								{{ 'Data Not Found' }}
+							{% endif %}
+							<div class="col-xs-ofsset-5 col-xs-12 row">
+								<div class="center-block text-muted">Choose your language display in page design tool or <a href="http://docs.tshirtecommerce.com/knowledgebase/setting-lanuages/" target="_blank">add new language.</a></div>
+							</div>
+						</div>
+					</div>
+					<hr/>
+					<p class="text-right">
+						<a class="btn btn-default pull-left" href="http://docs.tshirtecommerce.com/kb/opencart-custom-product-designer/" target="_blank">Document Online</a>
+						<a href="javascript:void(0)" class="btn btn-default" onclick="quicksetup.skip('cliparts-store','design-tool',50)">Skip this step</a>
+						<a href="javascript:void(0)" class="btn btn-success" onclick="quicksetup.submit('quicksetup2')">Save &amp; Continue</a>
+					</p>
+				</form>
+			</div> <!-- \End Design Tool -->
+
+			<div id="e-cliparts-store" class="page-content" style="display: none;">
+				<h2 class="title">Cliparts and Design Template</h2>
+				<p>We give to you librarie clipart and design template. You can active <a href="http://9file.net/" target="_blank">T-Shirt eCommerce Store</a> to use design from our community.</p>
+				<hr/>
+				<form class="form-horizontal" method="post" action="">
+					<p>1. Create account on website <a href="http://store.9file.net/users/register" target="_blank">http://store.9file.net</a></p>
+					<div class="form-group" style="margin-bottom: 0px;">
+						<label class="col-xs-7 row">2. Enter your API</label>
+						<div class="col-xs-7 row"><input type="text" class="form-control" id="store-api"></div>
+					</div>
+					<p><small>Video create account and get your API <a href="https://youtu.be/cPvRpXdVe0s?t=23s" target="_blank">https://youtu.be/cPvRpXdVe0s</a></small></p>
+					<p>3. Click button "<strong>Active &amp; Download Design</strong>"</p>
+					<div id="download-store2" class="download-store">
+						<p class="help-block">Status: <strong class="text-danger text-status">Checking API</strong></p>
+						<div class="progress">
+						  <div id="progress-bar2" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100" style="width: 1%">
+							<span class="sr-only">1% Complete (success)</span>
+						  </div>
+						</div>
+						<p id="text-status2" class="text-danger">Please don't navigate away while importing</p>
+					</div>
+					<hr>
+					<p class="text-right">
+						<a class="btn btn-default pull-left" href="javascript:void(0)" onclick="quicksetup.back('design-tool','cliparts-store',25)">Back</a>
+						<a class="btn btn-default" href="javascript:void(0)" onclick="quicksetup.skip('import-products','cliparts-store',75)">Skip this step</a>
+						<button type="button" onclick="quicksetup.download(this)" class="btn btn-success"">Active &amp; Download Design</button>
+					</p>
+				</form>
+			</div> <!-- \End Clipart Store -->
+
+			<div id="e-import-products" class="page-content" style="display: none;">
+				<h2 class="title">Import Product Demo</h2>
+				<p>Please check button "Import Products" to automatic import products demo.</p>
+				<hr/>
+				<div id="download-store3" class="download-store">
+					<p class="help-block">Status: <strong class="text-danger text-status">Downloading data</strong></p>
+					<div class="progress">
+					  	<div id="progress-bar3" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100" style="width: 1%">
+							<span class="sr-only">1% Complete (success)</span>
+					  	</div>
+					</div>
+					<p id="text-status3" class="text-danger">Please don't navigate away while importing</p>
+				</div>
+				<p class="text-right">
+					<a class="btn btn-default pull-left" href="javascript:void(0)" onclick="quicksetup.back('cliparts-store','import-products',50)">Back</a>
+					<a class="btn btn-default" href="javascript:void(0)" onclick="quicksetup.skip('finished','import-products',100)">Skip this step</a>
+					<button type="button" onclick="quicksetup.import(this)" class="btn btn-success ">Import Products</button>
+				</p>
+			</div> <!-- \End Import Products -->
+
+			<div id="e-finished" class="page-content" style="display: none;">
+				<h2 class="title">Finished!</h2>
+				<p class="des-addon">Congratulations! You have successfully installed plugin.</p>
+				<hr/>
+				<div class="alert alert-info">
+					We provide some useful addon for this plugin that add many functions awesome on your site.
+					<br>
+					<br>
+					<a class="btn btn-default btn-sm" target="_blank" href="https://tshirtecommerce.com/add-ons">View Addons</a>
+				</div>
+				<div class="form-horizontal">
+					<div class="form-group">
+						<div class="col-xs-6">
+							<p><strong>Help &amp; Support</strong></p>
+							<ul>
+								<li>Please read <a target="_blank" href="http://docs.tshirtecommerce.com/kb/opencart-custom-product-designer/">documentation</a> of module</li>
+								<li>If you need help, please <a target="_blank" href="https://tshirtecommerce.com/submit-ticket">submit a ticket</a></li>
+							</ul>
+						</div>
+						
+						<div class="col-xs-6">
+							<p><strong>Popular articles</strong></p>
+							<ul>
+								<li><a target="_blank" href="http://docs.tshirtecommerce.com/kb/opencart-custom-product-designer/">Setting Module</a></li>
+								<li><a target="_blank" href="http://docs.tshirtecommerce.com/knowledgebase/update-module/">Where I can updating plugin</a></li>
+								<li><a target="_blank" href="http://docs.tshirtecommerce.com/kb/opencart-custom-product-designer/prices-and-printing-method-opencart-custom-product-designer/">Prices and printing method</a></li>
+								<li><a target="_blank" href="">Add new product design</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<p class="text-right">
+					<a class="btn btn-default pull-left" href="">Create your first product!</a>
+					<a class="btn btn-default btn-success" href="">View Design Tool</a>		
+				</p>
+			</div> <!-- \End Finish -->
+	  	</div> <!-- \End Modal body -->
+	</div> <!-- \End Modal content -->
+</div> <!-- \End Modal Quicksetup -->
+
+<script>
+	function ts_preview_css() {
+		var css = document.getElementById('tshirtecommerce_customize_design_btn').value;
+		document.getElementById('btn-preview').style = css;
+	}
+
+	// Quicksetup
+	var btnQicksetup = document.getElementById('btn-quicksetup');
+	var modalQicksetup = document.getElementById('modal-quicksetup');
+	var spanQuicksetup = document.getElementsByClassName("close-quicksetup")[0];
+	btnQicksetup.onclick = function() {
+	    modalQicksetup.style.display = "block";
+	}
+	spanQuicksetup.onclick = function() {
+	    modalQicksetup.style.display = "none";
+	}
+</script>
+{{ footer }}

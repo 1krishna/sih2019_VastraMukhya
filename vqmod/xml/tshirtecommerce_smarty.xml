@@ -1,0 +1,70 @@
+<modification>
+	<id>tshirtecommerce</id>
+	<version>4.2.1</version>
+	<vqmver>2.4.0</vqmver>
+	<author>Tshirtecommerce Team</author>
+
+	<!-- for get informations and display on product detail page -->
+	<file error="skip" name="catalog/view/theme/*/template/product/product.tpl,system/storage/modification/catalog/view/theme/*/template/product/product.tpl">
+		<operation error="skip">
+			<search position="before"><![CDATA[
+				id="button-cart"
+			]]></search>
+			<add><![CDATA[
+				<!-- vqmod/xml/tshirtecommerce_product.xml -->
+				<?php if (isset($tshirtecommerce)) { ?>
+					<?php if (isset($tshirtecommerce['show_attribute']) && $tshirtecommerce['show_attribute'] == 1 && isset($tshirtecommerce['attributes'])) { ?>
+						<?php echo $tshirtecommerce['attributes'] ?>
+					<?php } ?>
+					<?php if (!isset($tshirtecommerce['is_campaign']) || $tshirtecommerce['is_campaign'] != 1) { ?>
+						<?php if (isset($tshirtecommerce['price_of_print']) && !empty($tshirtecommerce['price_of_print'])) { ?>
+							<label style="width:!00%;"><?php echo $tshirtecommerce['price_of_print'] ?></label><br/>
+						<?php } ?>
+						<?php if (isset($tshirtecommerce['design_custom_button']) && !empty($tshirtecommerce['design_custom_button'])) { ?>
+							<?php echo $tshirtecommerce['design_custom_button'] ?>
+						<?php } ?>
+						<?php if (isset($tshirtecommerce['hide_add2cart']) && $tshirtecommerce['hide_add2cart'] == 1) { ?>
+							<style>#button-cart, .product-options .qty { display:none!important; }</style>
+						<?php } ?>
+					<?php } ?>
+				<?php } ?>
+			]]></add>
+		</operation>
+	</file>
+
+	<file error="skip" name="catalog/view/theme/*/template/account/account.tpl,system/storage/modification/catalog/view/theme/*/template/account/account.tpl">
+		<operation error="skip">
+			<search position="before" index="1"><![CDATA[
+				id="content"
+			]]></search>
+			<add><![CDATA[
+				<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+				<script>
+					var mydesign_page = 2;
+					var mydesign_ajax_link = '<?php echo $mydesign_ajax_link ?>';
+					var mydesign_ajax_del_link = '<?php echo $mydesign_ajax_del_link ?>';
+					var tshirtecommerce_design_confirm_delete = '<?php echo $tshirtecommerce_design_confirm_delete ?>';
+				</script>
+				<div class="tshirtecommerce-mydesign-content">
+					<button class="tshirtecommerce-mydesign-accordion" onclick="fntshirtecommercemydesign()">
+						<?php echo $tshirtecommerce_account_mydesign ?> 
+						<i id="material_add" style="float:right;" class="material-icons">add</i>
+						<i id="material_remove" style="float:right;display:none;" class="material-icons">remove</i>
+					</button>
+					<div id="tshirtecommerce-mydesign" class="tshirtecommerce-mydesign" style="display:none;">
+						<div class="tshirtecommerce-loading"></div>
+	  					<p><a href="<?php echo $design_your_own ?>" target="_blank" class="mbtn mbtn-primary"><?php echo $tshirtecommerce_mydesign_create ?></a></p>
+
+	  					<div id="tshirtecommercemydesign">
+	  						<?php echo $mydesigns ?>
+	  					</div>
+	  					<?php if (isset($mydesign_continue) && $mydesign_continue == 1) { ?>
+	  					<p id="mydesign_continue"><a class="btn tshirtecommerce-design-loadmore" href="javascript:void(0)" onclick="fnmydesignmore(this)"><?php echo $tshirtecommerce_design_load_more ?></a></p>
+	  					<?php } ?>
+					</div>
+				</div>
+			]]></add>
+		</operation>
+	</file>
+
+</modification>

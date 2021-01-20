@@ -1,0 +1,73 @@
+{{ header }}{{ column_left }}
+
+<div id="content">
+	<div class="page-header">
+		<div class="container-fluid">
+			<h1>{{ heading_title }}</h1>
+      		<ul class="breadcrumb">
+        		{% for breadcrumb in breadcrumbs %}
+        		<li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        		{% endfor %}
+      		</ul>
+		</div>
+	</div>
+	<div class="container-fluid">
+		{% if error_success %}
+		<div class="form-group">
+			<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ error_success }}
+		      	<button type="button" class="close" data-dismiss="alert">×</button>
+		    </div>
+		</div>
+		{% endif %}
+		<div class="panel panel-default">
+			<div class="panel-body">
+			{% if checkcode == false %}
+				<div class="alert alert-warning alert-dismissible">
+					<i class="fa fa-check-circle"></i>
+					{{ msg_valid_code }}
+	      			<button type="button" class="close" data-dismiss="alert">×</button>
+	    		</div>
+			{% else %}
+				<div class="col-lg-4 col-md-4 col-sm-12">
+					<div class="tile tile-primary">
+						<div class="tile-body">
+							<h4>Import Products</h4>
+							<hr/>
+							<a href="{{ url_import_products }}" class="btn btn-default" style="color:#333;text-shadow: none;">Import</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-12">
+					<div class="tile tile-primary">
+						<div class="tile-body">
+							<h4>Import Clipart & Design template</h4>
+							<hr/>
+							<a href="{{ url_import_designs }}" class="btn btn-default" style="color:#333;text-shadow: none;">Import</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-12">
+					<div class="tile tile-primary">
+						<div class="tile-body">
+							<h4>Convert & Import Cliparts</h4>
+							<hr/>
+							<a href="{{ url_import_cliparts }}" class="btn btn-default" style="color:#333;text-shadow: none;">Import</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-12">
+					<div class="tile tile-primary">
+						<div class="tile-body">
+							<h4>Convert & Import design template</h4>
+							<hr/>
+							<a href="{{ url_import_templates }}" class="btn btn-default" style="color:#333;text-shadow: none;">Import</a>
+						</div>
+					</div>
+				</div>
+			{% endif %}
+			</div>
+		</div>
+		{%if import_html is defined %} {{ import_html }} {%endif%}
+	</div>
+</div>
+{{ footer }}

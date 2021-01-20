@@ -1,0 +1,9 @@
+.tstable {
+    border-collapse: collapse;
+    width: 100%;
+}
+.tstable th, .tstable td {
+    padding: 5px;
+    text-align: left;
+    border: 1px solid #ddd;
+}

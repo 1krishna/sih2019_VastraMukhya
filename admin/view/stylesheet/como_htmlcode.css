@@ -1,0 +1,12 @@
+﻿.nav-tabs > li > a {
+    color: red;
+    font-weight: bold;
+    background: #92E6FF;
+}
+fieldset legend, .module_name {
+    background: #dbfff0;
+}
+
+.module_name {
+    font-weight: bold;
+}

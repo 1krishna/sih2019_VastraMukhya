@@ -1,0 +1,17 @@
+{% if content %}
+    {% if block_title or show_border %}
+        <div class="box">
+            {% if block_title %}
+            <div class="box-heading" style="{{ show_border ? '' : 'border:none;' }}">
+                {% if icon %}<img src="{{ icon }}" alt="" style="height:16px;"/>{% endif %}
+                {% if block_link %}<a href="{{ block_link }}">{{ block_title }}</a>{% else %}{{ block_title }}{% endif %}
+            </div>
+            {% endif %}
+            <div class="box-content" style="background:transparent;{{ show_border ? '' : 'border:none;' }}">
+                {{ content }}
+            </div>
+        </div>
+    {% else %}
+        {{ content }}
+    {% endif %}
+{% endif %}
